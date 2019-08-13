@@ -112,9 +112,9 @@ int main(){
     printf("%d %d %d %c \n",ax2->cpf,ax2->cpft,ax2->valor,ax2->op);
     destroy_p(p);*/
     pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
-    vetor_pilhas[0] = create_p();
-    vetor_pilhas[1] = create_p();
-    vetor_pilhas[2] = create_p();
+    for(int i =0; i<3;i++){
+    	 vetor_pilhas[i] = create_p();
+    }
 	int n;
 	int cpf, cpft, valor;
     char op;
@@ -127,12 +127,12 @@ int main(){
     	push_p(vetor_pilhas[guiche],cliente);
     }
     //printf("%d %d %d", isEmpty_p(vetor_pilhas[0]),isEmpty_p(vetor_pilhas[1]),isEmpty_p(vetor_pilhas[2]));
+    	printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
     for(int i =0; i<3;i++){
     	printf("Guiche %d: %d \n",i+1,vetor_pilhas[i]->cont);
     	show_p(vetor_pilhas[i]);
     	destroy_p(vetor_pilhas[i]);
     }
     free(vetor_pilhas);
-    free(cliente);
-
+    //free(cliente);
 }
