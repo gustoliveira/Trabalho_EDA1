@@ -43,6 +43,7 @@ void push_p(pilha *p, no *n){
     p->topo = n;
 }
 
+//Checa se a pilha está vazia, retorna "1" se sim e "0" caso contrário
 int isEmpty_p(pilha *p){
     if(p->topo == NULL){
         return 1;
@@ -52,6 +53,7 @@ int isEmpty_p(pilha *p){
     }
 }
 
+//Desempilha elemento do topo da pilha referente
 no* pop_p(pilha *p){
 	if(p->topo == NULL){
         return NULL;
