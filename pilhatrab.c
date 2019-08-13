@@ -77,26 +77,45 @@ void destroy_p(pilha *p){
 
 int main(){
 
-    pilha *p = create_p();
-
+   /* pilha *p = create_p();
     printf("%p %d \n",(void*)p->topo,p->cont);
-
     int cpf, cpft, valor;
     char op;
-
     scanf("%d %d %d %c", &cpf, &cpft, &valor, &op);
     no *cliente0 = create_n(cpf, cpft, valor, op);
     no *cliente1 = create_n(cpf+1, cpft+1, valor+1, op);
     no *ax1 = cliente0;    
-    /*printf("%d %d %d %c \n",p->topo->cpf,p->topo->cpft,p->topo->valor,p->topo->op);
+    printf("%d %d %d %c \n",p->topo->cpf,p->topo->cpft,p->topo->valor,p->topo->op);
     printf("Vazia: %d \n",isEmpty_p(p));
     no* a = pop_p(p);
     printf("%p \n", (void*) a);
-    printf("Vazia: %d\n",isEmpty_p(p));*/
+    printf("Vazia: %d\n",isEmpty_p(p));
     no *ax2 = cliente1;
     push_p(p,ax1);
     push_p(p,ax2);
     printf("%d %d %d %c \n",ax1->cpf,ax1->cpft,ax1->valor,ax1->op);
     printf("%d %d %d %c \n",ax2->cpf,ax2->cpft,ax2->valor,ax2->op);
-    destroy_p(p);
+    destroy_p(p);*/
+    pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
+    vetor_pilhas[0] = create_p();
+    vetor_pilhas[1] = create_p();
+    vetor_pilhas[2] = create_p();
+	int n;
+	int cpf, cpft, valor;
+    char op;
+    no *cliente = NULL;
+    scanf("%d",&n);
+    for(int i = 0; i<n;i++){
+    	scanf("%d %d %d %c", &cpf, &cpft, &valor, &op);
+    	cliente = create_n(cpf, cpft, valor, op);
+    	int guiche  = i%3;
+    	push_p(vetor_pilhas[guiche],cliente);
+    }
+    printf("%d %d %d", isEmpty_p(vetor_pilhas[0]),isEmpty_p(vetor_pilhas[1]),isEmpty_p(vetor_pilhas[2]));
+    destroy_p(vetor_pilhas[0]);
+    destroy_p(vetor_pilhas[1]);
+    destroy_p(vetor_pilhas[2]);
+    free(vetor_pilhas);
+    free(cliente);
+
 }
