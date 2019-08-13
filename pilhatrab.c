@@ -52,6 +52,18 @@ int isEmpty_p(pilha *p){
     }
 }
 
+no* pop_p(pilha *p){
+	if(p->topo == NULL){
+        return NULL;
+    }
+    else{
+        no* aux = p->topo;
+        p->topo = aux->prox;
+        aux->prox = NULL;
+        return aux;
+    }
+}
+
 int main(){
 
     pilha *p = create_p();
@@ -62,8 +74,14 @@ int main(){
     char op;
 
     scanf("%d %d %d %c", &cpf, &cpft, &valor, &op);
-    no *guiche0 = create_n(cpf, cpft, valor, op);
-    printf("%d %d %d %c\n", guiche0->cpf, guiche0->cpft, guiche0->valor, guiche0->op);
-
+    no *cliente0 = create_n(cpf, cpft, valor, op);
+    push_p(p,cliente0);
+    printf("%d %d %d %c \n",p->topo->cpf,p->topo->cpft,p->topo->valor,p->topo->op);
+    printf("Vazia: %d \n",isEmpty_p(p));
+    no* a = pop_p(p);
+    printf("%p \n", (void*) a);
+    printf("Vazia: %d\n",isEmpty_p(p));
+    free(a);
+    free(p);
 
 }
