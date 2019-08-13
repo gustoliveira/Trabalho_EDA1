@@ -66,6 +66,15 @@ no* pop_p(pilha *p){
     }
 }
 
+//Remove a pilha e todos os dados referentes a ela
+void destroy_p(pilha *p){
+	while(1 == 1){
+		if(p->topo==NULL) break;
+		free(pop_p(p));
+	}
+	free(p);
+}
+
 int main(){
 
     pilha *p = create_p();
@@ -77,13 +86,17 @@ int main(){
 
     scanf("%d %d %d %c", &cpf, &cpft, &valor, &op);
     no *cliente0 = create_n(cpf, cpft, valor, op);
-    push_p(p,cliente0);
-    printf("%d %d %d %c \n",p->topo->cpf,p->topo->cpft,p->topo->valor,p->topo->op);
+    no *cliente1 = create_n(cpf+1, cpft+1, valor+1, op);
+    no *ax1 = cliente0;    
+    /*printf("%d %d %d %c \n",p->topo->cpf,p->topo->cpft,p->topo->valor,p->topo->op);
     printf("Vazia: %d \n",isEmpty_p(p));
     no* a = pop_p(p);
     printf("%p \n", (void*) a);
-    printf("Vazia: %d\n",isEmpty_p(p));
-    free(a);
-    free(p);
-
+    printf("Vazia: %d\n",isEmpty_p(p));*/
+    no *ax2 = cliente1;
+    push_p(p,ax1);
+    push_p(p,ax2);
+    printf("%d %d %d %c \n",ax1->cpf,ax1->cpft,ax1->valor,ax1->op);
+    printf("%d %d %d %c \n",ax2->cpf,ax2->cpft,ax2->valor,ax2->op);
+    destroy_p(p);
 }
