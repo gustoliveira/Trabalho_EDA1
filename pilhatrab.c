@@ -26,6 +26,7 @@ no* create_n(int cpf,int cpft,int valor,char op){
     n->cpft = cpft;
     n->valor = valor;
     n->op = op;
+    n->prox = NULL;
     return n;
 
 }
@@ -41,6 +42,7 @@ pilha* create_p(){
 void push_p(pilha *p, no *n){
     n->prox = p->topo;
     p->topo = n;
+    p->cont++;
 }
 
 //Checa se a pilha está vazia, retorna "1" se sim e "0" caso contrário
@@ -62,6 +64,7 @@ no* pop_p(pilha *p){
         no* aux = p->topo;
         p->topo = aux->prox;
         aux->prox = NULL;
+        p->cont--;
         return aux;
     }
 }
@@ -73,6 +76,18 @@ void destroy_p(pilha *p){
 		free(pop_p(p));
 	}
 	free(p);
+}
+
+//Exibe as informações referente a pilha desejada
+void show_p(pilha *p){
+	if(p->topo!= NULL){
+		no* aux = p->topo;	
+		while(1==1){
+			printf("[%d,%d,%d,%c]\n",aux->cpf,aux->cpft,aux->valor,aux->op);
+			aux = aux->prox;
+			if(aux==NULL) break;
+		}
+	}
 }
 
 int main(){
@@ -111,10 +126,12 @@ int main(){
     	int guiche  = i%3;
     	push_p(vetor_pilhas[guiche],cliente);
     }
-    printf("%d %d %d", isEmpty_p(vetor_pilhas[0]),isEmpty_p(vetor_pilhas[1]),isEmpty_p(vetor_pilhas[2]));
-    destroy_p(vetor_pilhas[0]);
-    destroy_p(vetor_pilhas[1]);
-    destroy_p(vetor_pilhas[2]);
+    //printf("%d %d %d", isEmpty_p(vetor_pilhas[0]),isEmpty_p(vetor_pilhas[1]),isEmpty_p(vetor_pilhas[2]));
+    for(int i =0; i<3;i++){
+    	printf("Guiche %d: %d \n",i+1,vetor_pilhas[i]->cont);
+    	show_p(vetor_pilhas[i]);
+    	destroy_p(vetor_pilhas[i]);
+    }
     free(vetor_pilhas);
     free(cliente);
 
