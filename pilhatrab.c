@@ -83,7 +83,7 @@ void show_p(pilha *p){
 	if(p->topo!= NULL){
 		no* aux = p->topo;	
 		while(1==1){
-			printf("[%llu,%llu,%c,%llu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
+			printf("[%llu, %llu, %c, %llu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
 			aux = aux->prox;
 			if(aux==NULL) break;
 		}
@@ -109,7 +109,7 @@ int main(){
     }
     	printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
     for(int i =0; i<3;i++){
-    	printf("Guiche %d: %llu \n",i+1,vetor_pilhas[i]->cont);
+    	printf("Guiche %d: %llu\n",i+1,vetor_pilhas[i]->cont);
     	show_p(vetor_pilhas[i]);
     	destroy_p(vetor_pilhas[i]);
     }

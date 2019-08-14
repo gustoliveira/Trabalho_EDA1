@@ -98,7 +98,7 @@ void show_p(pilha *p){
 	if(p->topo != NULL){  //Se a pilha não estiver vazia
 		no* aux = p->topo; //Auxiliar para diminuir printf
 		while(1==1){
-			printf("[%llu,%llu,%c,%llu]\n", aux->cpf, aux->cpft, aux->op, aux->valor);
+			printf("[%llu, %llu, %c, %llu]\n", aux->cpf, aux->cpft, aux->op, aux->valor);
 			aux = aux->prox; //Para imprimir o prox nó
 			if(aux==NULL) break; //Se o proximo nó for NULL, a pilha está vazia
 		}
@@ -176,7 +176,7 @@ int main(){
 
     //"for" para imprimir informação e destruir cada pilha
     for(int i =0; i<3; i++){
-    	printf("Guiche %d: %llu \n", i+1, vetor_pilhas[i]->cont);
+    	printf("Guiche %d: %llu\n", i+1, vetor_pilhas[i]->cont);
     	show_p(vetor_pilhas[i]); //Imprimir
     	destroy_p(vetor_pilhas[i]); //Destruir pilha referente ao guiche
     }
