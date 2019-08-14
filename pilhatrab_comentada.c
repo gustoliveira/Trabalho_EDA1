@@ -12,7 +12,7 @@ Nele, são colocados todos as informações que é necessário armazenar
 na pilha e um ponteiro tipo no indicando o proximo na ordem.
 */
 struct no{
-    int cpf,cpft,valor;
+    unsigned long long int cpf,cpft,valor;
     char op;
     no *prox;
 };
@@ -27,7 +27,7 @@ cont é uma variável que serve para saber qual o tamanho da pilha.
 */
 struct pilha{
     no *topo;
-    int cont;
+    unsigned long long int cont;
 };
 
 //Função para inicializar pilha
@@ -43,7 +43,7 @@ Função para inicializar nó
 Recebe como argumentos todos os valores que serão inseridos no novo nó,
 para poder armazenar no espaço de memória alocado
 */
-no *create_n(int cpf, int cpft, int valor, char op){
+no *create_n(unsigned long long int cpf, unsigned long long int cpft, unsigned long long int valor, char op){
     no *n = (no*)malloc(sizeof(no));     //n será o end de mem alocado pelo malloc
     n->cpf = cpf;
     n->cpft = cpft;
@@ -61,7 +61,7 @@ void push_p(pilha *p, no *n){
 }
 
 //Checa se a pilha está vazia
-int isEmpty_p(pilha *p){
+unsigned long long int isEmpty_p(pilha *p){
     if(p->topo == NULL){ //Se a pilha está vazia retorna 1
         return 1;
     }
@@ -98,7 +98,7 @@ void show_p(pilha *p){
 	if(p->topo != NULL){  //Se a pilha não estiver vazia
 		no* aux = p->topo; //Auxiliar para diminuir printf
 		while(1==1){
-			printf("[%d,%d,%d,%c]\n", aux->cpf, aux->cpft, aux->valor, aux->op);
+			printf("[%llu,%llu,%c,%llu]\n", aux->cpf, aux->cpft, aux->op, aux->valor);
 			aux = aux->prox; //Para imprimir o prox nó
 			if(aux==NULL) break; //Se o proximo nó for NULL, a pilha está vazia
 		}
@@ -111,7 +111,7 @@ int main(){
 /*
     pilha *p = create_p();                          //Criou a pilha
 
-    int cpf, cpft, valor; char op;                  //Criou variáveis para ler valores
+    unsigned long long int cpf, cpft, valor; char op;                  //Criou variáveis para ler valores
     scanf("%d %d %d %c", &cpf, &cpft, &valor, &op);
 
     //Um ponteiro para cada cliente receber o retorno da função create_n
@@ -152,23 +152,23 @@ int main(){
     pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
 
     //Cria três pilhas diferentes (guiches)
-    for(int i = 0; i<3; i++){
+    for(unsigned long long int i = 0; i<3; i++){
     	 vetor_pilhas[i] = create_p();
     }
 
-    int n; //Variável que lê quantas operações serão feitas no total
-	int cpf, cpft, valor; //Criou variáveis para ler valores
+    unsigned long long int n; //Variável que lê quantas operações serão feitas no total
+	unsigned long long int cpf, cpft, valor; //Criou variáveis para ler valores
     char op;
 
     //Ponteiro tipo no para que as informações lidas sejam associadas e depois
     //enviadas quando fizer o push
     no *cliente = NULL;
 
-    scanf("%d",&n); //Lê quantas operações serão feitas no total
-    for(int i = 0; i<n; i++){
-    	scanf("%d %d %d %c", &cpf, &cpft, &valor, &op);
+    scanf("%llu",&n); //Lê quantas operações serão feitas no total
+    for(unsigned long long int i = 0; i<n; i++){
+    	scanf("%llu %llu %c %llu", &cpf, &cpft, &op, &valor);
     	cliente = create_n(cpf, cpft, valor, op); //Cria um nó com as informações lidas
-    	int guiche  = i%3;  //O modulo irá verificar qual guiche será registrado a informação
+    	unsigned long long int guiche  = i%3;  //O modulo irá verificar qual guiche será registrado a informação
     	push_p(vetor_pilhas[guiche],cliente); //Faz push do novo nó
     }
 
@@ -176,7 +176,7 @@ int main(){
 
     //"for" para imprimir informação e destruir cada pilha
     for(int i =0; i<3; i++){
-    	printf("Guiche %d: %d \n", i+1, vetor_pilhas[i]->cont);
+    	printf("Guiche %d: %llu \n", i+1, vetor_pilhas[i]->cont);
     	show_p(vetor_pilhas[i]); //Imprimir
     	destroy_p(vetor_pilhas[i]); //Destruir pilha referente ao guiche
     }
