@@ -168,7 +168,7 @@ int main(){
     for(unsigned long long int i = 0; i<n; i++){
     	scanf("%llu %llu %c %llu", &cpf, &cpft, &op, &valor);
     	cliente = create_n(cpf, cpft, valor, op); //Cria um nó com as informações lidas
-    	unsigned long long int guiche  = i%3;  //O modulo irá verificar qual guiche será registrado a informação
+    	int guiche  = i%3;  //O modulo irá verificar qual guiche será registrado a informação
     	push_p(vetor_pilhas[guiche],cliente); //Faz push do novo nó
     }
 
