@@ -104,7 +104,7 @@ int main(){
     for(unsigned long long int i = 0; i<n;i++){
     	scanf("%llu %llu %c %llu", &cpf, &cpft, &op, &valor);
     	cliente = create_n(cpf, cpft, valor, op);
-    	unsigned long long int guiche  = i%3;
+    	int guiche  = i%3;
     	push_p(vetor_pilhas[guiche],cliente);
     }
     	printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
