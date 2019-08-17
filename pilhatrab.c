@@ -32,9 +32,9 @@ no* create_n(unsigned long long int cpf,unsigned long long int cpft,unsigned lon
 }
 //Função para inicializar pilha
 pilha* create_p(){
-        pilha *p = (pilha*) malloc(sizeof(pilha));
-        p->topo = NULL;
-        p->cont = 0;
+    pilha *p = (pilha*) malloc(sizeof(pilha));
+    p->topo = NULL;
+    p->cont = 0;
     return p;
 }
 
@@ -57,7 +57,7 @@ unsigned long long int isEmpty_p(pilha *p){
 
 //Desempilha elemento do topo da pilha referente
 no* pop_p(pilha *p){
-	if(p->topo == NULL){
+	if(isEmpty_p(p) == 1){
         return NULL;
     }
     else{
@@ -72,7 +72,7 @@ no* pop_p(pilha *p){
 //Remove a pilha e todos os dados referentes a ela
 void destroy_p(pilha *p){
 	while(1 == 1){
-		if(p->topo==NULL) break;
+		if(isEmpty_p(p) == 1) break;
 		free(pop_p(p));
 	}
 	free(p);
@@ -80,7 +80,7 @@ void destroy_p(pilha *p){
 
 //Exibe as informações referente a pilha desejada
 void show_p(pilha *p){
-	if(p->topo!= NULL){
+	if(isEmpty_p(p) == 0){
 		no* aux = p->topo;	
 		while(1==1){
 			printf("[%llu, %llu, %c, %llu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
@@ -107,7 +107,8 @@ int main(){
     	int guiche  = i%3;
     	push_p(vetor_pilhas[guiche],cliente);
     }
-    	printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
+    
+    printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
     for(int i =0; i<3;i++){
     	printf("Guiche %d: %llu\n",i+1,vetor_pilhas[i]->cont);
     	show_p(vetor_pilhas[i]);
