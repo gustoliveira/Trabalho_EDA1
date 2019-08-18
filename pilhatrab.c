@@ -1,3 +1,9 @@
+/*
+Álvaro Souza Oliveira
+Gustavo de Oliveira Ferreira
+João Lucas Lima de Melo
+Natan Santos Moura
+ */
 #include<stdio.h>
 #include<stdlib.h>
 
