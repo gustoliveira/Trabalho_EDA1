@@ -8,7 +8,7 @@ typedef struct no no;
 
 //Declaração do tipo nó
 struct no{
-    unsigned long long int cpf,cpft,valor;
+    unsigned long long int cpf,cpft,valor; //Unsigned long long int utilizado para suportar entrada <= 10^10
     char op;
     no* prox;
 };
@@ -46,7 +46,7 @@ void push_p(pilha *p, no *n){
 }
 
 //Checa se a pilha está vazia, retorna "1" se sim e "0" caso contrário
-unsigned long long int isEmpty_p(pilha *p){
+int isEmpty_p(pilha *p){
     if(p->topo == NULL){
         return 1;
     }
@@ -55,7 +55,7 @@ unsigned long long int isEmpty_p(pilha *p){
     }
 }
 
-//Desempilha elemento do topo da pilha referente
+//Desempilha elemento do topo da pilha referente, retorna NULL se pilha estiver vazia
 no* pop_p(pilha *p){
 	if(isEmpty_p(p) == 1){
         return NULL;
@@ -73,7 +73,7 @@ no* pop_p(pilha *p){
 void destroy_p(pilha *p){
 	while(1 == 1){
 		if(isEmpty_p(p) == 1) break;
-		free(pop_p(p));
+		free(pop_p(p)); //Libera o espaço de memória do Nó enquanto desempilha-o
 	}
 	free(p);
 }
@@ -91,23 +91,25 @@ void show_p(pilha *p){
 }
 
 int main(){
-
+    //Vetor de ponteiros para pilhas (guiche)
     pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
+    //Preenchimento do vetor de ponteiros para pilhas
     for(int i =0; i<3;i++){
     	 vetor_pilhas[i] = create_p();
     }
-	unsigned long long int n;
-	unsigned long long int cpf, cpft, valor;
+	unsigned long long int n, cpf, cpft, valor;
     char op;
-    no *cliente = NULL;
-    scanf("%llu",&n);
+    no *cliente = NULL; //Ponteiro auxiliar para manipular inserção de nós
+    scanf("%llu",&n); // Entrada de N
+    //Preenchimento do ponteiro auxiliar, criação do nó e associação à guiche referente
     for(unsigned long long int i = 0; i<n;i++){
     	scanf("%llu %llu %c %llu", &cpf, &cpft, &op, &valor);
     	cliente = create_n(cpf, cpft, valor, op);
-    	int guiche  = i%3;
+    	int guiche  = i%3;  //Cálculo do guiche para qual o cliente irá
     	push_p(vetor_pilhas[guiche],cliente);
     }
     
+    //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
     printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
     for(int i =0; i<3;i++){
     	printf("Guiche %d: %llu\n",i+1,vetor_pilhas[i]->cont);
