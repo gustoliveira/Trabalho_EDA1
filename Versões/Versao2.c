@@ -104,6 +104,28 @@ void show_p(pilha *p){
 	}
 }
 
+//Busca elemento na pilha e retorna-o
+no* search_p(pilha* p, unsigned long int cpf){
+  pilha* paux = (pilha*) malloc(sizeof(pilha));
+  int flag = 0;
+  no* resultado = NULL;
+  if (isEmpty_p(p)==0){
+    while(p->cont>0){
+      no* aux = pop_p(p);
+      if(aux->cpf == cpf && flag == 0){
+        resultado = aux;
+        flag = 1;
+      }
+      push_p(paux,aux);
+    }
+  }
+  while(paux->cont>0){
+    push_p(p,pop_p(paux));
+  }
+  free(paux);
+  return resultado;
+}
+
 //Declaração do tipo fila
 struct fila{
 	unsigned long int inicio,fim,qtd,tam;
@@ -163,7 +185,7 @@ no* front_f(fila*f){
 	else return f->vetor[f->inicio];
 }
 
-//Procura pela primeira ocorrência de um CPF na fila, e retorna-a
+//Procura pela primeira ocorrência de um CPF na fila, e retorna-a (NULL Caso não encontrado ou Fila Vazia)
 no* search_f (fila* f,unsigned long int cpf){
   no* resultado = NULL;
   if(isEmpty_f(f)==0){
@@ -303,4 +325,12 @@ int main(){
     printf("%lu\n",front_f(f)->cpf);
     pop_f(f);
     destroy_f(f); // TESTAR COM VALGRIND*/
+    pilha* p = create_p();
+    push_p(p,create_n(123,456,'d',150));
+    push_p(p,create_n(798,658,'d',200));
+    push_p(p,create_n(111,222,'d',100));
+    show_p(p);
+    printf("%p\n",search_p(p,111));
+    show_p(p);
+
 }
