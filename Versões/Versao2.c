@@ -30,20 +30,26 @@ struct pilha{
 //Função para inicializar nó
 no* create_n(unsigned long int cpf,unsigned long int cpft,unsigned long int valor,char op){
     no *n = (no*) malloc(sizeof(no));
-    n->cpf = cpf;
-    n->cpft = cpft;
-    n->valor = valor;
-    n->op = op;
-    n->prox = NULL;
-    return n;
+    if(n!=NULL){
+	    n->cpf = cpf;
+	    n->cpft = cpft;
+	    n->valor = valor;
+	    n->op = op;
+	    n->prox = NULL;
+	    return n;
+	}
+	else return NULL;
 
 }
 //Função para inicializar pilha
 pilha* create_p(){
     pilha *p = (pilha*) malloc(sizeof(pilha));
-    p->topo = NULL;
-    p->cont = 0;
-    return p;
+    if(p!=NULL){
+	    p->topo = NULL;
+	    p->cont = 0;
+	    return p;
+	}
+	else return NULL;
 }
 
 //Função para empilhar elemento
@@ -100,24 +106,48 @@ void show_p(pilha *p){
 
 //Declaração do tipo fila
 struct fila{
-	unsigned long int cont;
+	unsigned long int inicio,fim,qtd,tam;
+	unsigned long int* vetor;
 };
 
 //Função para inicializar fila
-fila* create_f(){
+fila* create_f(unsigned long int tamanho){
+	fila* f = (fila*) malloc(sizeof(fila));
+ 	if(f!=NULL){
+ 		f->inicio = 0;
+ 		f->fim = 0;
+ 		f->qtd = 0;
+ 		f->tam = tamanho;
+ 		f->vetor = (int*) malloc(sizeof(int)*f->tam);
+ 		if(f->vetor == NULL) return NULL;
+ 		else return f;
+ 	}
+ 	else return NULL;
+}
+
+int full_f(fila *f){
+	if(f->qtd == f->tam) return 1;
+	else return 0;
 }
 
 //Função para checar se a fila está vazia
 int isEmpty_f(fila *f){
+	if(f->qtd == 0) return 1;
+	else return 0;
 }
 
 //Função para enfileirar elemento
 void push_f(fila *f,no* x){
+	if(full_f(f)==1) printf("FILA CHEIA!");
+	else{
+		f->fim = (f->fim+1)%f->tam;
+		f->vetor[f->fim] = x;
+		f->qtd++;
+	}
 }
 
 //Função para desenfileirar primeiro elemento da fila 
 no* pop_f(fila *f){
-    if(vazia(f)==1) return NULL; //Fila vazia
  
 }
 
