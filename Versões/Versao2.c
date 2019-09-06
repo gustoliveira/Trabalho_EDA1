@@ -29,8 +29,8 @@ struct pilha{
 
 //Função para inicializar nó
 no* create_n(unsigned long int cpf,unsigned long int cpft,unsigned long int valor,char op){
-    no *n = (no*) malloc(sizeof(no));
-    if(n!=NULL){
+  no *n = (no*) malloc(sizeof(no));
+  if(n!=NULL){
 	    n->cpf = cpf;
 	    n->cpft = cpft;
 	    n->valor = valor;
@@ -43,8 +43,8 @@ no* create_n(unsigned long int cpf,unsigned long int cpft,unsigned long int valo
 }
 //Função para inicializar pilha
 pilha* create_p(){
-    pilha *p = (pilha*) malloc(sizeof(pilha));
-    if(p!=NULL){
+  pilha *p = (pilha*) malloc(sizeof(pilha));
+  if(p!=NULL){
 	    p->topo = NULL;
 	    p->cont = 0;
 	    return p;
@@ -95,7 +95,7 @@ void destroy_p(pilha *p){
 //Exibe as informações referente a pilha desejada
 void show_p(pilha *p){
 	if(isEmpty_p(p) == 0){
-		no* aux = p->topo;	
+		no* aux = p->topo;
 		while(1==1){
 			printf("[%lu, %lu, %c, %lu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
 			aux = aux->prox;
@@ -107,7 +107,7 @@ void show_p(pilha *p){
 //Declaração do tipo fila
 struct fila{
 	unsigned long int inicio,fim,qtd,tam;
-	unsigned long int* vetor;
+	no** vetor;
 };
 
 //Função para inicializar fila
@@ -115,10 +115,10 @@ fila* create_f(unsigned long int tamanho){
 	fila* f = (fila*) malloc(sizeof(fila));
  	if(f!=NULL){
  		f->inicio = 0;
- 		f->fim = 0;
+ 		f->fim = tamanho-1;
  		f->qtd = 0;
  		f->tam = tamanho;
- 		f->vetor = (int*) malloc(sizeof(int)*f->tam);
+ 		f->vetor = (no**) malloc(sizeof(no*)*f->tam);
  		if(f->vetor == NULL) return NULL;
  		else return f;
  	}
@@ -140,17 +140,17 @@ int isEmpty_f(fila *f){
 void push_f(fila *f,no* x){
 	if(full_f(f)==1) printf("FILA CHEIA!");
 	else{
-		f->fim = (f->fim+1)%f->tam;
-		f->vetor[f->fim] = x;
-		f->qtd++;
+		  f->fim = (f->fim+1)%f->tam;
+		  f->vetor[f->fim] = x;
+		  f->qtd++;
 	}
 }
 
-//Função para desenfileirar primeiro elemento da fila 
+//Função para desenfileirar primeiro elemento da fila
 no* pop_f(fila *f){
  	if(isEmpty_f(f)==1) printf("FILA VAZIA!");
  	else{
- 		no* x = f->inicio;
+ 		unsigned long int x = f->inicio;
  		f->inicio = (f->inicio+1)%f->tam;
  		f->qtd--;
  		return f->vetor[x];
@@ -158,9 +158,38 @@ no* pop_f(fila *f){
 }
 
 //Retorna cpf do primeiro elemento da fila (-1 - Caso fila vazia)
-unsigned long int front_f(fila*f){
-	if(isEmpty_f(f)==1) return -1;
-	else return f->vetor[f->inicio]; 
+no* front_f(fila*f){
+	if(isEmpty_f(f)==1) return NULL;
+	else return f->vetor[f->inicio];
+}
+
+//Procura pela primeira ocorrência de um CPF na fila, e retorna-a
+no* search_f (fila* f,unsigned long int cpf){
+  no* resultado = NULL;
+  if(isEmpty_f(f)==0){
+    int flag=0;
+    for(int i =0; i<f->tam;i++){
+      no* aux = front_f(f);
+      if(aux->cpf == cpf && flag == 0){
+          resultado = aux;
+      }
+      pop_f(f);
+      push_f(f,aux);
+    }
+  }
+  return resultado;
+}
+
+//Função para destuir a fila e todos os nós referentes
+void destroy_f(fila* f){
+  if(isEmpty_f(f)==0){
+    while(f->qtd>0){
+        no* aux = front_f(f);
+        pop_f(f);
+        free(aux);
+    }
+  }
+  free(f);
 }
 
 //Definição do tipo lista
@@ -176,9 +205,9 @@ lista* create_l(){
     else{
         l->primeiro = NULL;
         l->cont=0;
-        return l;   
+        return l;
     }
-    
+
 }
 
 //Função para checar se lista está vazia
@@ -194,23 +223,23 @@ no* search_l(lista* l,int k){
     no* aux = l->primeiro;
     while(aux != NULL){
         if(aux->cpf == k) return aux;
-        aux = aux->prox;    
+        aux = aux->prox;
     }
     return NULL;
 }
 
-//Função para inserir elemento na lista 
+//Função para inserir elemento na lista
 void inserir_lista(lista* l, no* x){
   /* MUDAR PARA ORDENADA  if(lista_vazia(l)==1 || pos == 1){
         x->prox = l->primeiro;
-        l->primeiro = x;    
+        l->primeiro = x;
     }
     else{
         int i = 1;
         no* aux = l->primeiro;
         while(i!=pos-1 && aux->prox!=NULL){
             aux = aux->prox;
-            i++;    
+            i++;
         }
     x->prox = aux->prox;
     aux->prox = x;
@@ -226,7 +255,7 @@ no* pop_l(lista* l, no* k){
         while(x->prox !=NULL){
             if(x->prox == k){
                 x->prox = k->prox;
-                break;          
+                break;
             }
             else x = x->prox;
         }
@@ -236,7 +265,7 @@ no* pop_l(lista* l, no* k){
 }
 
 int main(){
-    //Vetor de ponteiros para pilhas (guiche)
+    /*//Vetor de ponteiros para pilhas (guiche)
     pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
     //Preenchimento do vetor de ponteiros para pilhas
     for(int i =0; i<3;i++){
@@ -247,19 +276,31 @@ int main(){
     no *cliente = NULL; //Ponteiro auxiliar para manipular inserção de nós
     scanf("%lu",&n); // Entrada de N
     //Preenchimento do ponteiro auxiliar, criação do nó e associação à guiche referente
-   /* for(unsigned long int i = 0; i<n;i++){
+    for(unsigned long int i = 0; i<n;i++){
     	scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);
     	cliente = create_n(cpf, cpft, valor, op);
     	int guiche  = i%3;  //Cálculo do guiche para qual o cliente irá
     	push_p(vetor_pilhas[guiche],cliente);
     } ALTERAR PARA FUNÇÃO*/
-    
+
     //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
     /*printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
     for(int i =0; i<3;i++){
     	printf("Guiche %d: %lu\n",i+1,vetor_pilhas[i]->cont);
     	show_p(vetor_pilhas[i]);
     	destroy_p(vetor_pilhas[i]);
-    } ALTERAR PARA FUNÇÃO*/
+    } ALTERAR PARA FUNÇÃO
     free(vetor_pilhas);
+    fila* f = create_f(3);
+    push_f(f,create_n(123,456,'D',150));
+    push_f(f,create_n(798,658,'O',200));
+    push_f(f,create_n(111,222,'O',100));
+    printf("%p",search_f(f,3333));
+    printf("\n%lu\n",front_f(f)->cpf);
+    pop_f(f);
+    printf("%lu\n",front_f(f)->cpf);
+    pop_f(f);
+    printf("%lu\n",front_f(f)->cpf);
+    pop_f(f);
+    destroy_f(f); // TESTAR COM VALGRIND*/
 }
