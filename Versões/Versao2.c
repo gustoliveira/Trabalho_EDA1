@@ -106,6 +106,8 @@ void show_p(pilha *p){
 
 //Busca elemento na pilha e retorna-o
 no* search_p(pilha* p, unsigned long int cpf){
+  //A função retira do topo da pilha e aloca em uma pilha auxiliar, para poder buscar no topo da pilha se o elemento existe. Findado o processo de busca
+  //os valores da pilha auxiliar retornam à fila principal
   pilha* paux = (pilha*) malloc(sizeof(pilha));
   int flag = 0;
   no* resultado = NULL;
@@ -326,11 +328,14 @@ int main(){
     pop_f(f);
     destroy_f(f); // TESTAR COM VALGRIND*/
     pilha* p = create_p();
-    push_p(p,create_n(123,456,'d',150));
-    push_p(p,create_n(798,658,'d',200));
-    push_p(p,create_n(111,222,'d',100));
+    no* aux = create_n(123,456,400,'d');
+    push_p(p,aux);
+    aux = create_n(777,888,200,'d');
+    push_p(p,aux);
+    aux = create_n(999,454,150,'d');
+    push_p(p,aux);
     show_p(p);
-    printf("%p\n",search_p(p,111));
+    printf("%p\n",search_p(p,222));
     show_p(p);
 
 }
