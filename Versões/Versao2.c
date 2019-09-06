@@ -12,13 +12,19 @@ typedef struct fila fila;
 typedef struct pilha pilha;
 typedef struct lista lista;
 typedef struct no no;
-
+typedef struct nol nol;
 
 //Declaração do tipo nó
 struct no{
     unsigned long int cpf,cpft,valor; //unsigned long int utilizado para suportar entrada <= 2^32-1
     char op;
     no* prox;
+};
+
+//Declaração do tipo nó para lista
+struct nol{
+    unsigned long int cpf,ops,saldo; //unsigned long int utilizado para suportar entrada <= 2^32-1
+    nol* prox;
 };
 
 //Declaração do tipo pilha
@@ -41,6 +47,20 @@ no* create_n(unsigned long int cpf,unsigned long int cpft,unsigned long int valo
 	else return NULL;
 
 }
+
+//Função para inicializar nó de lista
+nol* create_nol(unsigned long int cpf,unsigned long int ops,unsigned long int saldo){
+  nol *n = (nol*) malloc(sizeof(nol));
+  if(n!=NULL){
+	    n->cpf = cpf;
+      n->ops = 0;
+      n->saldo = 0;
+	    return n;
+	}
+	else return NULL;
+
+}
+
 //Função para inicializar pilha
 pilha* create_p(){
   pilha *p = (pilha*) malloc(sizeof(pilha));
@@ -218,7 +238,7 @@ void destroy_f(fila* f){
 
 //Definição do tipo lista
 struct lista{
-    no* primeiro;
+    nol* primeiro;
     int cont;
 };
 
@@ -243,8 +263,8 @@ int isEmpty_l(lista* l){
 }
 
 //Função para buscar elemento na lista
-no* search_l(lista* l,int k){
-    no* aux = l->primeiro;
+nol* search_l(lista* l,int k){
+    nol* aux = l->primeiro;
     while(aux != NULL){
         if(aux->cpf == k) return aux;
         aux = aux->prox;
@@ -253,39 +273,49 @@ no* search_l(lista* l,int k){
 }
 
 //Função para inserir elemento na lista
-void inserir_lista(lista* l, no* x){
-  /* MUDAR PARA ORDENADA  if(lista_vazia(l)==1 || pos == 1){
+void push_l(lista* l, nol* x){
+    if(isEmpty_l(l)==1){
+        l->primeiro = x;
+        l->primeiro->prox = NULL;
+    }
+    else{
+      if(x->cpf < l->primeiro->cpf){
         x->prox = l->primeiro;
         l->primeiro = x;
-    }
-    else{
-        int i = 1;
-        no* aux = l->primeiro;
-        while(i!=pos-1 && aux->prox!=NULL){
+      }
+      else{
+        nol* aux = l->primeiro;
+        while(x->cpf > aux->cpf){
+            if(aux->prox == NULL || x->cpf < aux->prox->cpf){
+              x->prox = aux->prox;
+              aux->prox = x;
+            }
             aux = aux->prox;
-            i++;
+            if(aux==NULL) break;
         }
-    x->prox = aux->prox;
-    aux->prox = x;
-    }*/
-}
+      }
+    }
+  }
 
 //Função para remover elemento da lista
-no* pop_l(lista* l, no* k){
-    if(l->primeiro == k)
-        l->primeiro = l->primeiro->prox;
-    else{
-        no* x = l->primeiro;
-        while(x->prox !=NULL){
-            if(x->prox == k){
-                x->prox = k->prox;
-                break;
-            }
-            else x = x->prox;
-        }
-    }
-    k->prox = NULL;
-    return k;
+nol* pop_l(lista* l, nol* k){
+  if(isEmpty_l(l)==1) return NULL;
+  else{
+      if(l->primeiro == k)
+          l->primeiro = l->primeiro->prox;
+      else{
+          nol* x = l->primeiro;
+          while(x->prox !=NULL){
+              if(x->prox == k){
+                  x->prox = k->prox;
+                  break;
+              }
+              else x = x->prox;
+          }
+      }
+      k->prox = NULL;
+      return k;
+  }
 }
 
 int main(){
@@ -326,7 +356,7 @@ int main(){
     pop_f(f);
     printf("%lu\n",front_f(f)->cpf);
     pop_f(f);
-    destroy_f(f); // TESTAR COM VALGRIND*/
+    destroy_f(f); // TESTAR COM VALGRIND
     pilha* p = create_p();
     no* aux = create_n(123,456,400,'d');
     push_p(p,aux);
@@ -336,6 +366,18 @@ int main(){
     push_p(p,aux);
     show_p(p);
     printf("%p\n",search_p(p,222));
-    show_p(p);
+    show_p(p);*/
+    lista* l = create_l();
+    push_l(l,create_nol(119,2,100));
+    push_l(l,create_nol(114,3,100));
+    push_l(l,create_nol(112,4,100));
+    push_l(l,create_nol(110,5,100));
+    printf("%lu",l->primeiro->cpf);
+    pop_l(l,l->primeiro);
+    printf("\n%lu",l->primeiro->cpf);
+    pop_l(l,l->primeiro);
+    printf("\n%lu",l->primeiro->cpf);
+    pop_l(l,l->primeiro);
+    printf("\n%lu",l->primeiro->cpf);
 
 }
