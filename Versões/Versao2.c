@@ -148,12 +148,19 @@ void push_f(fila *f,no* x){
 
 //Função para desenfileirar primeiro elemento da fila 
 no* pop_f(fila *f){
- 
+ 	if(isEmpty_f(f)==1) printf("FILA VAZIA!");
+ 	else{
+ 		no* x = f->inicio;
+ 		f->inicio = (f->inicio+1)%f->tam;
+ 		f->qtd--;
+ 		return f->vetor[x];
+ 	}
 }
 
-//Retorna cpf do primeiro elemento da fila
+//Retorna cpf do primeiro elemento da fila (-1 - Caso fila vazia)
 unsigned long int front_f(fila*f){
-
+	if(isEmpty_f(f)==1) return -1;
+	else return f->vetor[f->inicio]; 
 }
 
 //Definição do tipo lista
