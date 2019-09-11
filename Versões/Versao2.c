@@ -23,7 +23,8 @@ struct no{
 
 //Declaração do tipo nó para lista
 struct nol{
-    unsigned long int cpf,ops,saldo; //unsigned long int utilizado para suportar entrada <= 2^32-1
+    unsigned long int cpf,ops; //unsigned long int utilizado para suportar entrada <= 2^32-1
+    long int saldo;
     nol* prox;
 };
 
@@ -240,7 +241,7 @@ void destroy_f(fila* f){
 //Definição do tipo lista
 struct lista{
     nol* primeiro;
-    int cont;
+    unsigned long int cont;
 };
 
 //Função para inicializar lista
@@ -296,6 +297,7 @@ void push_l(lista* l, nol* x){
         }
       }
     }
+    l->cont++;
   }
 
 //Função para remover elemento da lista
@@ -317,6 +319,7 @@ nol* pop_l(lista* l, nol* k){
       k->prox = NULL;
       return k;
   }
+  l->cont--;
 }
 
 //Função para destruir lista e todo seu conteúdo
@@ -385,6 +388,17 @@ void atendance(unsigned long int ordem, no* cliente, pilha** vetor,lista* l){
 
 }
 
+//Função para exibir relatório final
+void show_relat_final(lista* l){
+  //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada lista
+  printf("\n-:| RELATÓRIO FINAL |:-\n%lu\n",l->cont);
+    nol* aux = l->primeiro;
+    while(aux!=NULL){
+      printf("-:[ %lu: %lu %li\n",aux->cpf,aux->ops,aux->saldo);
+      aux=aux->prox;
+    }
+}
+
 //Cria e inicializa vetor de pilhas para funcionarem como guichê
 pilha** create_vet_p(){
   pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
@@ -414,12 +428,8 @@ int main(){
     } 
     //Chamada para a função de exibição do relatório Parcial
     show_relat_parc(vetor_pilhas);
-
-    nol* aux = l->primeiro;
-    while(aux!=NULL){
-      printf("CPF: %lu OPS: %lu SALDO: %lu \n",aux->cpf,aux->ops,aux->saldo);
-      aux = aux->prox;
-    }
+     //Chamada para a função de exibição do relatório Final
+    show_relat_final(l);
 
     free(vetor_pilhas);
     destroy_f(f);
