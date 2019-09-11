@@ -7,7 +7,7 @@ Natan Santos Moura
 #include<stdio.h>
 #include<stdlib.h>
 
-//Definição do tipo pilha, fila, lista e nó
+//Definição do tipo pilha, fila, lista e nó e nó da lista
 typedef struct fila fila;
 typedef struct pilha pilha;
 typedef struct lista lista;
@@ -353,21 +353,48 @@ pilha** create_vet_p(){
   return vetor_pilhas;
 }
 
+//Função que opera sobre o nó referente para depositar valor na conta, além de atualizar a quantidade de operações realizadas
+void deposit(nol* cliente, unsigned long int valor){
+  cliente->saldo += valor;
+  cliente->ops++;
+}
+
+//Função que opera sobre o nó referente para retirar valor da conta, além de atualizar a quantidade de operações realizadas
+void saque(nol* cliente, unsigned long int valor){
+  cliente->saldo -= valor;
+  cliente->ops++;
+}
+
+//Função que opera sobre o nó referente para transferir valor de uma conta para outra, além de atualizar a quantidade de operações realizadas
+void transfer(nol* cliente1, nol* cliente2, unsigned long int valor){
+  cliente1->saldo-=valor;
+  cliente2->saldo+=valor;
+  cliente1->ops++;
+  cliente2->ops++;
+}
+
+
 int main(){
-    //Vetor de ponteiros para pilhas (guiche)
-    pilha **vetor_pilhas = create_vet_p();
 	  unsigned long int n, cpf, cpft, valor;
     char op;
     scanf("%lu",&n); // Entrada de N
-    //Criação do cliente integrado à inserção no guiche, pela função "send_to_stack"
+    fila* f = create_f(n); //Cria fila com tamanho máximo igual à quantidade de inserts
+    //Criação do cliente integrado à inserção na fila de atendimento
     for(unsigned long int i = 0; i<n;i++){
     	scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);
       no* cliente = create_n(cpf,cpft,op,valor);
-      send_to_stack(i,cliente,vetor_pilhas);
+      push_f(f,cliente); //Envia clientes para fila de espera
+    } 
+    //Vetor de ponteiros para pilhas (guiche)
+    pilha **vetor_pilhas = create_vet_p();
+    for(unsigned long int k = 0; k<f->tam;k++){
+      no* aux = pop_f(f); //Pega primeiro elemento da fila
+      send_to_stack(k,aux,vetor_pilhas); //Envia primeiro elemento da fila para atendimento
     } 
     //Chamada para a função de exibição do relatório Parcial
     show_relat_parc(vetor_pilhas);
     free(vetor_pilhas);
+    destroy_f(f);
    
 
 }
