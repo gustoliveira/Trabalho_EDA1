@@ -49,12 +49,12 @@ no* create_n(unsigned long int cpf,unsigned long int cpft,char op,unsigned long 
 }
 
 //Função para inicializar nó de lista
-nol* create_nol(unsigned long int cpf,unsigned long int ops,unsigned long int saldo){
+nol* create_nol(unsigned long int cpf){
   nol *n = (nol*) malloc(sizeof(nol));
   if(n!=NULL){
 	    n->cpf = cpf;
-      n->ops = ops;
-      n->saldo = saldo;
+      n->ops = 0;
+      n->saldo = 0;
 	    return n;
 	}
 	else return NULL;
@@ -338,25 +338,11 @@ void show_relat_parc(pilha** vetor){
     }
 }
 
-//Função para enviar cliente para atendimento
-void send_to_stack(unsigned long int ordem, no* cliente, pilha** vetor){
-  int guiche = ordem%3; //Cálculo do guiche para qual o cliente irá
-  push_p(vetor[guiche],cliente);
-}
-
-//Cria e inicializa vetor de pilhas para funcionarem como guichê
-pilha** create_vet_p(){
-  pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
-  for(int i =0; i<3;i++){
-    vetor_pilhas[i] = create_p();
-  }
-  return vetor_pilhas;
-}
-
 //Função que opera sobre o nó referente para depositar valor na conta, além de atualizar a quantidade de operações realizadas
-void deposit(nol* cliente, unsigned long int valor){
-  cliente->saldo += valor;
-  cliente->ops++;
+void deposit(nol* cliente1, nol* cliente2, unsigned long int valor){
+  cliente2->saldo += valor;
+  cliente2->ops++;
+  cliente1->ops++;
 }
 
 //Função que opera sobre o nó referente para retirar valor da conta, além de atualizar a quantidade de operações realizadas
@@ -373,6 +359,40 @@ void transfer(nol* cliente1, nol* cliente2, unsigned long int valor){
   cliente2->ops++;
 }
 
+//Função para enviar cliente para atendimento
+void atendance(unsigned long int ordem, no* cliente, pilha** vetor,lista* l){
+  //Sessão de registro de transações bancárias nas pilhas
+  int guiche = ordem%3; //Cálculo do guiche para qual o cliente irá
+  push_p(vetor[guiche],cliente);
+  //Sessão de registro de operações na lista
+  if(cliente->op != 'S'){
+      //Procura pela existência de CPF ou CPFT na lista, e adiciona-os caso não existam
+      if(search_l(l,cliente->cpf) == NULL) push_l(l,create_nol(cliente->cpf));
+      if(search_l(l,cliente->cpft) == NULL) push_l(l,create_nol(cliente->cpft));
+      //Realiza as operações sobre os nós da lista
+      switch(cliente->op){
+        case 'D' : deposit(search_l(l,cliente->cpf),search_l(l,cliente->cpft),cliente->valor);
+        break;
+        case 'T': transfer(search_l(l,cliente->cpf),search_l(l,cliente->cpft),cliente->valor);
+        break;
+      }
+  }
+  else{
+      //Procura pela existência de CPF na lista, e adiciona-o caso não exista
+      if(search_l(l,cliente->cpf) == NULL) push_l(l,create_nol(cliente->cpf));
+      saque(search_l(l,cliente->cpf), cliente->valor);
+  }
+
+}
+
+//Cria e inicializa vetor de pilhas para funcionarem como guichê
+pilha** create_vet_p(){
+  pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
+  for(int i =0; i<3;i++){
+    vetor_pilhas[i] = create_p();
+  }
+  return vetor_pilhas;
+}
 
 int main(){
 	  unsigned long int n, cpf, cpft, valor;
@@ -387,14 +407,23 @@ int main(){
     } 
     //Vetor de ponteiros para pilhas (guiche)
     pilha **vetor_pilhas = create_vet_p();
+    lista* l = create_l();
     for(unsigned long int k = 0; k<f->tam;k++){
       no* aux = pop_f(f); //Pega primeiro elemento da fila
-      send_to_stack(k,aux,vetor_pilhas); //Envia primeiro elemento da fila para atendimento
+      atendance(k,aux,vetor_pilhas,l); //Envia primeiro elemento da fila para atendimento
     } 
     //Chamada para a função de exibição do relatório Parcial
     show_relat_parc(vetor_pilhas);
+
+    nol* aux = l->primeiro;
+    while(aux!=NULL){
+      printf("CPF: %lu OPS: %lu SALDO: %lu \n",aux->cpf,aux->ops,aux->saldo);
+      aux = aux->prox;
+    }
+
     free(vetor_pilhas);
     destroy_f(f);
+    destroy_l(l);
    
 
 }
