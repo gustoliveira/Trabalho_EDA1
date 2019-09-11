@@ -350,11 +350,9 @@ pilha** create_vet_p(){
   for(int i =0; i<3;i++){
     vetor_pilhas[i] = create_p();
   }
-  return vetor_pilhas;
-}
 
 int main(){
-    //Vetor de ponteiros para pilhas (guiche)
+   /* //Vetor de ponteiros para pilhas (guiche)
     pilha **vetor_pilhas = create_vet_p();
 	  unsigned long int n, cpf, cpft, valor;
     char op;
@@ -368,6 +366,39 @@ int main(){
     //Chamada para a função de exibição do relatório Parcial
     show_relat_parc(vetor_pilhas);
     free(vetor_pilhas);
-   
-
+    fila* f = create_f(3);
+    push_f(f,create_n(123,456,'D',150));
+    push_f(f,create_n(798,658,'O',200));
+    push_f(f,create_n(111,222,'O',100));
+    printf("%p",search_f(f,3333));
+    printf("\n%lu\n",front_f(f)->cpf);
+    pop_f(f);
+    printf("%lu\n",front_f(f)->cpf);
+    pop_f(f);
+    printf("%lu\n",front_f(f)->cpf);
+    pop_f(f);
+    destroy_f(f); // TESTAR COM VALGRIND
+    pilha* p = create_p();
+    no* aux = create_n(123,456,400,'d');
+    push_p(p,aux);
+    aux = create_n(777,888,200,'d');
+    push_p(p,aux);
+    aux = create_n(999,454,150,'d');
+    push_p(p,aux);
+    show_p(p);
+    printf("%p\n",search_p(p,222));
+    show_p(p);
+    lista* l = create_l();
+    push_l(l,create_nol(119,2,100));
+    push_l(l,create_nol(114,3,100));
+    push_l(l,create_nol(112,4,100));
+    push_l(l,create_nol(110,5,100));
+    printf("%lu",l->primeiro->cpf);
+    pop_l(l,l->primeiro);
+    printf("\n%lu",l->primeiro->cpf);
+    pop_l(l,l->primeiro);
+    printf("\n%lu",l->primeiro->cpf);
+    pop_l(l,l->primeiro);
+    printf("\n%lu",l->primeiro->cpf);
+*/
 }
