@@ -331,10 +331,10 @@ void destroy_l(lista* l){
 }
 
 //Função para exibir relatório parcial
-void show_relat_parc(pilha** vetor){
+void show_relat_parc(pilha** vetor,int qt_guiche){
   //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
-  printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
-    for(int i =0; i<3;i++){
+  printf("-:| RELATÓRIO PARCIAL |:-\n%d\n",qt_guiche);
+    for(int i =0; i<qt_guiche;i++){
     	printf("Guiche %d: %lu\n",i+1,vetor[i]->cont);
     	show_p(vetor[i]);
     	destroy_p(vetor[i]);
@@ -363,9 +363,9 @@ void transfer(nol* cliente1, nol* cliente2, unsigned long int valor){
 }
 
 //Função para enviar cliente para atendimento
-void atendance(unsigned long int ordem, no* cliente, pilha** vetor,lista* l){
+void atendance(unsigned long int ordem, no* cliente, pilha** vetor,lista* l, int qt_guiche){
   //Sessão de registro de transações bancárias nas pilhas
-  int guiche = ordem%3; //Cálculo do guiche para qual o cliente irá
+  int guiche = ordem%qt_guiche; //Cálculo do guiche para qual o cliente irá
   push_p(vetor[guiche],cliente);
   //Sessão de registro de operações na lista
   if(cliente->op != 'S'){
@@ -400,15 +400,17 @@ void show_relat_final(lista* l){
 }
 
 //Cria e inicializa vetor de pilhas para funcionarem como guichê
-pilha** create_vet_p(){
-  pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
-  for(int i =0; i<3;i++){
+pilha** create_vet_p(int qt_guiches){
+  pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*qt_guiches);
+  for(int i =0; i<qt_guiches;i++){
     vetor_pilhas[i] = create_p();
   }
   return vetor_pilhas;
 }
 
 int main(){
+
+    int qt_guiches = 3; //Quantidade de guichês que serão disponibilizados para atendimento.
 	  unsigned long int n, cpf, cpft, valor;
     char op;
     scanf("%lu",&n); // Entrada de N
@@ -420,14 +422,14 @@ int main(){
       push_f(f,cliente); //Envia clientes para fila de espera
     } 
     //Vetor de ponteiros para pilhas (guiche)
-    pilha **vetor_pilhas = create_vet_p();
+    pilha **vetor_pilhas = create_vet_p(qt_guiches); 
     lista* l = create_l();
     for(unsigned long int k = 0; k<f->tam;k++){
       no* aux = pop_f(f); //Pega primeiro elemento da fila
-      atendance(k,aux,vetor_pilhas,l); //Envia primeiro elemento da fila para atendimento
+      atendance(k,aux,vetor_pilhas,l,qt_guiches); //Envia primeiro elemento da fila para atendimento
     } 
     //Chamada para a função de exibição do relatório Parcial
-    show_relat_parc(vetor_pilhas);
+    show_relat_parc(vetor_pilhas,qt_guiches);
      //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
 
@@ -435,5 +437,4 @@ int main(){
     destroy_f(f);
     destroy_l(l);
    
-
 }
