@@ -130,23 +130,26 @@ no* search_p(pilha* p, unsigned long int cpf){
   //A função retira do topo da pilha e aloca em uma pilha auxiliar, para poder buscar no topo da pilha se o elemento existe. Findado o processo de busca
   //os valores da pilha auxiliar retornam à fila principal
   pilha* paux = (pilha*) malloc(sizeof(pilha));
-  int flag = 0;
-  no* resultado = NULL;
-  if (isEmpty_p(p)==0){
-    while(p->cont>0){
-      no* aux = pop_p(p);
-      if(aux->cpf == cpf && flag == 0){
-        resultado = aux;
-        flag = 1;
+  if(paux !=NULL){
+    int flag = 0;
+    no* resultado = NULL;
+    if (isEmpty_p(p)==0){
+      while(p->cont>0){
+        no* aux = pop_p(p);
+        if(aux->cpf == cpf && flag == 0){
+          resultado = aux;
+          flag = 1;
+        }
+        push_p(paux,aux);
       }
-      push_p(paux,aux);
     }
+    while(paux->cont>0){
+      push_p(p,pop_p(paux));
+    }
+    free(paux);
+    return resultado;
   }
-  while(paux->cont>0){
-    push_p(p,pop_p(paux));
-  }
-  free(paux);
-  return resultado;
+  else return NULL;
 }
 
 //Declaração do tipo fila
@@ -402,10 +405,13 @@ void show_relat_final(lista* l){
 //Cria e inicializa vetor de pilhas para funcionarem como guichê
 pilha** create_vet_p(int qt_guiches){
   pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*qt_guiches);
-  for(int i =0; i<qt_guiches;i++){
-    vetor_pilhas[i] = create_p();
+  if(vetor_pilhas != NULL){
+    for(int i =0; i<qt_guiches;i++){
+      vetor_pilhas[i] = create_p();
+    }
+    return vetor_pilhas;
   }
-  return vetor_pilhas;
+  else return NULL;
 }
 
 int main(){
