@@ -34,7 +34,7 @@ struct pilha{
 };
 
 //Função para inicializar nó
-no* create_n(unsigned long int cpf,unsigned long int cpft,unsigned long int valor,char op){
+no* create_n(unsigned long int cpf,unsigned long int cpft,char op,unsigned long int valor){
   no *n = (no*) malloc(sizeof(no));
   if(n!=NULL){
 	    n->cpf = cpf;
@@ -53,8 +53,8 @@ nol* create_nol(unsigned long int cpf,unsigned long int ops,unsigned long int sa
   nol *n = (nol*) malloc(sizeof(nol));
   if(n!=NULL){
 	    n->cpf = cpf;
-      n->ops = 0;
-      n->saldo = 0;
+      n->ops = ops;
+      n->saldo = saldo;
 	    return n;
 	}
 	else return NULL;
@@ -169,6 +169,7 @@ fila* create_f(unsigned long int tamanho){
  	else return NULL;
 }
 
+//Função que retorna 1 se a fila está cheia ou 0 senão
 int full_f(fila *f){
 	if(f->qtd == f->tam) return 1;
 	else return 0;
@@ -190,9 +191,11 @@ void push_f(fila *f,no* x){
 	}
 }
 
-//Função para desenfileirar primeiro elemento da fila
+//Função para desenfileirar primeiro elemento da fila (NULL se vazia)
 no* pop_f(fila *f){
- 	if(isEmpty_f(f)==1) printf("FILA VAZIA!");
+ 	if(isEmpty_f(f)==1){
+    return NULL;
+  }
  	else{
  		unsigned long int x = f->inicio;
  		f->inicio = (f->inicio+1)%f->tam;
@@ -212,7 +215,7 @@ no* search_f (fila* f,unsigned long int cpf){
   no* resultado = NULL;
   if(isEmpty_f(f)==0){
     int flag=0;
-    for(int i =0; i<f->tam;i++){
+    for(unsigned long int i =0; i<f->tam;i++){
       no* aux = front_f(f);
       if(aux->cpf == cpf && flag == 0){
           resultado = aux;
@@ -226,13 +229,11 @@ no* search_f (fila* f,unsigned long int cpf){
 
 //Função para destuir a fila e todos os nós referentes
 void destroy_f(fila* f){
-  if(isEmpty_f(f)==0){
-    while(f->qtd>0){
-        no* aux = front_f(f);
-        pop_f(f);
-        free(aux);
-    }
+  while(isEmpty_f(f)==0){
+    no* cliente  = pop_f(f);
+    free(cliente);
   }
+  free(f->vetor);
   free(f);
 }
 
@@ -263,7 +264,7 @@ int isEmpty_l(lista* l){
 }
 
 //Função para buscar elemento na lista
-nol* search_l(lista* l,int k){
+nol* search_l(lista* l,unsigned long int k){
     nol* aux = l->primeiro;
     while(aux != NULL){
         if(aux->cpf == k) return aux;
@@ -318,66 +319,56 @@ nol* pop_l(lista* l, nol* k){
   }
 }
 
+//Função para destruir lista e todo seu conteúdo
+void destroy_l(lista* l){
+  while(l->primeiro != NULL){
+    free(pop_l(l, l->primeiro)); //O "pop" sempre atualiza o primeiro da lista, logo funcionará até a lista se esvaziar
+  }
+  free(l);
+}
+
+//Função para exibir relatório parcial
+void show_relat_parc(pilha** vetor){
+  //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
+  printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
+    for(int i =0; i<3;i++){
+    	printf("Guiche %d: %lu\n",i+1,vetor[i]->cont);
+    	show_p(vetor[i]);
+    	destroy_p(vetor[i]);
+    }
+}
+
+//Função para enviar cliente para atendimento
+void send_to_stack(unsigned long int ordem, unsigned long int cpf, unsigned long int cpft, char op, unsigned long int valor,pilha** vetor){
+  no* cliente = create_n(cpf,cpft,op,valor);
+  int guiche = ordem%3; //Cálculo do guiche para qual o cliente irá
+  push_p(vetor[guiche],cliente);
+}
+
 int main(){
-    /*//Vetor de ponteiros para pilhas (guiche)
+   /* //Vetor de ponteiros para pilhas (guiche)
     pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*3);
     //Preenchimento do vetor de ponteiros para pilhas
     for(int i =0; i<3;i++){
     	 vetor_pilhas[i] = create_p();
     }
-	unsigned long int n, cpf, cpft, valor;
+	  unsigned long int n, cpf, cpft, valor;
     char op;
-    no *cliente = NULL; //Ponteiro auxiliar para manipular inserção de nós
     scanf("%lu",&n); // Entrada de N
-    //Preenchimento do ponteiro auxiliar, criação do nó e associação à guiche referente
+    //Criação do cliente integrado à inserção no guiche, pela função "send_to_stack"
     for(unsigned long int i = 0; i<n;i++){
     	scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);
-    	cliente = create_n(cpf, cpft, valor, op);
-    	int guiche  = i%3;  //Cálculo do guiche para qual o cliente irá
-    	push_p(vetor_pilhas[guiche],cliente);
-    } ALTERAR PARA FUNÇÃO*/
+      send_to_stack(i,cpf,cpft,op,valor,vetor_pilhas);
+    } 
+    //Chamada para a função de exibição do relatório Parcial
+    show_relat_parc(vetor_pilhas);
+    free(vetor_pilhas);*/
 
-    //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
-    /*printf("-:| RELATÓRIO PARCIAL |:-\n3\n");
-    for(int i =0; i<3;i++){
-    	printf("Guiche %d: %lu\n",i+1,vetor_pilhas[i]->cont);
-    	show_p(vetor_pilhas[i]);
-    	destroy_p(vetor_pilhas[i]);
-    } ALTERAR PARA FUNÇÃO
-    free(vetor_pilhas);
     fila* f = create_f(3);
     push_f(f,create_n(123,456,'D',150));
     push_f(f,create_n(798,658,'O',200));
     push_f(f,create_n(111,222,'O',100));
-    printf("%p",search_f(f,3333));
-    printf("\n%lu\n",front_f(f)->cpf);
-    pop_f(f);
-    printf("%lu\n",front_f(f)->cpf);
-    pop_f(f);
-    printf("%lu\n",front_f(f)->cpf);
-    pop_f(f);
-    destroy_f(f); // TESTAR COM VALGRIND
-    pilha* p = create_p();
-    no* aux = create_n(123,456,400,'d');
-    push_p(p,aux);
-    aux = create_n(777,888,200,'d');
-    push_p(p,aux);
-    aux = create_n(999,454,150,'d');
-    push_p(p,aux);
-    show_p(p);
-    printf("%p\n",search_p(p,222));
-    show_p(p);*/
-    lista* l = create_l();
-    push_l(l,create_nol(119,2,100));
-    push_l(l,create_nol(114,3,100));
-    push_l(l,create_nol(112,4,100));
-    push_l(l,create_nol(110,5,100));
-    printf("%lu",l->primeiro->cpf);
-    pop_l(l,l->primeiro);
-    printf("\n%lu",l->primeiro->cpf);
-    pop_l(l,l->primeiro);
-    printf("\n%lu",l->primeiro->cpf);
-    pop_l(l,l->primeiro);
-    printf("\n%lu",l->primeiro->cpf);
+    destroy_f(f);
+   
 
 }
