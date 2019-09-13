@@ -113,18 +113,6 @@ void destroy_p(pilha *p){
 	free(p);
 }
 
-//Exibe as informações referente a pilha desejada
-void show_p(pilha *p){
-	if(isEmpty_p(p) == 0){
-		no* aux = p->topo;
-		while(1==1){
-			printf("[%lu, %lu, %c, %lu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
-			aux = aux->prox;
-			if(aux==NULL) break;
-		}
-	}
-}
-
 //Busca elemento na pilha e retorna-o
 no* search_p(pilha* p, unsigned long int cpf){
   //A função retira do topo da pilha e aloca em uma pilha auxiliar, para poder buscar no topo da pilha se o elemento existe. Findado o processo de busca
@@ -208,10 +196,15 @@ no* pop_f(fila *f){
  	}
 }
 
-//Retorna cpf do primeiro elemento da fila (-1 - Caso fila vazia)
+//Retorna primeiro elemento da fila (NULL - Caso fila vazia)
 no* front_f(fila*f){
 	if(isEmpty_f(f)==1) return NULL;
 	else return f->vetor[f->inicio];
+}
+
+//Retorna tamanho da fila
+unsigned long int size_f(fila* f){
+  return f->tam;
 }
 
 //Procura pela primeira ocorrência de um CPF na fila, e retorna-a (NULL Caso não encontrado ou Fila Vazia)
@@ -277,7 +270,7 @@ nol* search_l(lista* l,unsigned long int k){
     return NULL;
 }
 
-//Função para inserir elemento na lista
+//Função para inserir elemento na lista, já ordenando-o
 void push_l(lista* l, nol* x){
     if(isEmpty_l(l)==1){
         l->primeiro = x;
@@ -333,17 +326,6 @@ void destroy_l(lista* l){
   free(l);
 }
 
-//Função para exibir relatório parcial
-void show_relat_parc(pilha** vetor,int qt_guiche){
-  //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
-  printf("-:| RELATÓRIO PARCIAL |:-\n%d\n",qt_guiche);
-    for(int i =0; i<qt_guiche;i++){
-    	printf("Guiche %d: %lu\n",i+1,vetor[i]->cont);
-    	show_p(vetor[i]);
-    	destroy_p(vetor[i]);
-    }
-}
-
 //Função que opera sobre o nó referente para depositar valor na conta, além de atualizar a quantidade de operações realizadas
 void deposit(nol* cliente1, nol* cliente2, unsigned long int valor){
   cliente2->saldo += valor;
@@ -366,11 +348,13 @@ void transfer(nol* cliente1, nol* cliente2, unsigned long int valor){
 }
 
 //Função para enviar cliente para atendimento
-void atendance(unsigned long int ordem, no* cliente, pilha** vetor,lista* l, int qt_guiche){
-  //Sessão de registro de transações bancárias nas pilhas
+void attendance(unsigned long int ordem, no* cliente, pilha** vetor, int qt_guiche){
   int guiche = ordem%qt_guiche; //Cálculo do guiche para qual o cliente irá
   push_p(vetor[guiche],cliente);
-  //Sessão de registro de operações na lista
+}
+
+//Função para atualizar/criar registros para lista do relatório final
+void update_frelat(lista*l, no* cliente){
   if(cliente->op != 'S'){
       //Procura pela existência de CPF ou CPFT na lista, e adiciona-os caso não existam
       if(search_l(l,cliente->cpf) == NULL) push_l(l,create_nol(cliente->cpf));
@@ -388,7 +372,33 @@ void atendance(unsigned long int ordem, no* cliente, pilha** vetor,lista* l, int
       if(search_l(l,cliente->cpf) == NULL) push_l(l,create_nol(cliente->cpf));
       saque(search_l(l,cliente->cpf), cliente->valor);
   }
+}
 
+//Exibe as informações referente a pilha desejada, retirando o topo, lendo-o e adicionando à uma fila auxiliar, depois a pilha original retorna a
+//seu estado inicial (Além disso enquanto exibe atualiza o relatório final)
+void show_p(pilha *p,lista* l){
+	if(isEmpty_p(p) == 0){
+    pilha* paux = create_p();
+		while(isEmpty_p(p)!=1){
+      no* aux = pop_p(p); 
+			printf("[%lu, %lu, %c, %lu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
+      update_frelat(l,aux);
+			push_p(paux,aux);
+		}
+    while(isEmpty_p(paux)!=1) push_p(p,pop_p(paux));
+    free(paux);
+	}
+}
+
+//Função para gerar/exibir relatório parcial e atualizar relatório final
+void show_relat_parc(pilha** vetor,int qt_guiche,lista* l){
+  //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
+  printf("-:| RELATÓRIO PARCIAL |:-\n%d\n",qt_guiche);
+    for(int i =0; i<qt_guiche;i++){
+    	printf("Guiche %d: %lu\n",i+1,vetor[i]->cont);
+    	show_p(vetor[i],l);
+    	destroy_p(vetor[i]);
+    }
 }
 
 //Função para exibir relatório final
@@ -427,15 +437,15 @@ int main(){
       no* cliente = create_n(cpf,cpft,op,valor);
       push_f(f,cliente); //Envia clientes para fila de espera
     } 
-    //Vetor de ponteiros para pilhas (guiche)
+    //Vetor de ponteiros para pilhas (guiches)
     pilha **vetor_pilhas = create_vet_p(qt_guiches); 
-    lista* l = create_l();
-    for(unsigned long int k = 0; k<f->tam;k++){
+    lista* l = create_l(); //Criação da lista para relatório final
+    for(unsigned long int k = 0; k<size_f(f);k++){
       no* aux = pop_f(f); //Pega primeiro elemento da fila
-      atendance(k,aux,vetor_pilhas,l,qt_guiches); //Envia primeiro elemento da fila para atendimento
+      attendance(k,aux,vetor_pilhas,qt_guiches); //Envia primeiro elemento da fila para atendimento
     } 
     //Chamada para a função de exibição do relatório Parcial
-    show_relat_parc(vetor_pilhas,qt_guiches);
+    show_relat_parc(vetor_pilhas,qt_guiches,l);
      //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
 
