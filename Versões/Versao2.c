@@ -16,7 +16,8 @@ typedef struct nol nol;
 
 //Declaração do tipo nó
 struct no{
-    unsigned long int cpf,cpft,valor; //unsigned long int utilizado para suportar entrada <= 2^32-1
+    unsigned long int cpf,cpft; //unsigned long int utilizado para suportar entrada <= 2^32-1
+    long int valor;
     char op;
     no* prox;
 };
@@ -35,7 +36,7 @@ struct pilha{
 };
 
 //Função para inicializar nó
-no* create_n(unsigned long int cpf,unsigned long int cpft,char op,unsigned long int valor){
+no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valor){
   no *n = (no*) malloc(sizeof(no));
   if(n!=NULL){
 	    n->cpf = cpf;
@@ -327,20 +328,20 @@ void destroy_l(lista* l){
 }
 
 //Função que opera sobre o nó referente para depositar valor na conta, além de atualizar a quantidade de operações realizadas
-void deposit(nol* cliente1, nol* cliente2, unsigned long int valor){
+void deposit(nol* cliente1, nol* cliente2, long int valor){
   cliente2->saldo += valor;
   cliente2->ops++;
   cliente1->ops++;
 }
 
 //Função que opera sobre o nó referente para retirar valor da conta, além de atualizar a quantidade de operações realizadas
-void saque(nol* cliente, unsigned long int valor){
+void saque(nol* cliente, long int valor){
   cliente->saldo -= valor;
   cliente->ops++;
 }
 
 //Função que opera sobre o nó referente para transferir valor de uma conta para outra, além de atualizar a quantidade de operações realizadas
-void transfer(nol* cliente1, nol* cliente2, unsigned long int valor){
+void transfer(nol* cliente1, nol* cliente2, long int valor){
   cliente1->saldo-=valor;
   cliente2->saldo+=valor;
   cliente1->ops++;
@@ -381,7 +382,7 @@ void show_p(pilha *p,lista* l){
     pilha* paux = create_p();
 		while(isEmpty_p(p)!=1){
       no* aux = pop_p(p); 
-			printf("[%lu, %lu, %c, %lu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
+			printf("[%lu,%lu,%c,%lu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
       update_frelat(l,aux);
 			push_p(paux,aux);
 		}
@@ -404,10 +405,10 @@ void show_relat_parc(pilha** vetor,int qt_guiche,lista* l){
 //Função para exibir relatório final
 void show_relat_final(lista* l){
   //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada lista
-  printf("\n-:| RELATÓRIO FINAL |:-\n%lu\n",l->cont);
+  printf("\n-:| RELATÓRIO FINAL |:-\n %lu\n",l->cont);
     nol* aux = l->primeiro;
     while(aux!=NULL){
-      printf("-:[ %lu: %lu %li\n",aux->cpf,aux->ops,aux->saldo);
+      printf("-:[ %lu : %lu %li\n",aux->cpf,aux->ops,aux->saldo);
       aux=aux->prox;
     }
 }
