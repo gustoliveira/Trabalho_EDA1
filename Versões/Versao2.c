@@ -253,7 +253,7 @@ lista* create_l(){
 
 }
 
-//Função para checar se lista está vazia
+//Função para checar se lista está vazia (1 - Vazia / 0 - Não vazia)
 int isEmpty_l(lista* l){
     if (l->primeiro == NULL)
         return 1;
@@ -261,7 +261,7 @@ int isEmpty_l(lista* l){
         return 0;
 }
 
-//Função para buscar elemento na lista
+//Função para buscar elemento na lista (NULL - Se não encontrado)
 nol* search_l(lista* l,unsigned long int k){
     nol* aux = l->primeiro;
     while(aux != NULL){
@@ -445,7 +445,7 @@ int main(){
       no* aux = pop_f(f); //Pega primeiro elemento da fila
       attendance(k,aux,vetor_pilhas,qt_guiches); //Envia primeiro elemento da fila para atendimento
     } 
-    //Chamada para a função de exibição do relatório Parcial
+    //Chamada para a função de exibição do relatório Parcial 
     show_relat_parc(vetor_pilhas,qt_guiches,l);
      //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
