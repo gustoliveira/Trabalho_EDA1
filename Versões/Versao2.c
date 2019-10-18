@@ -75,10 +75,11 @@ pilha* create_p(){
 }
 
 //Função para empilhar elemento
-void push_p(pilha *p, no *n){
+no* push_p(pilha *p, no *n){
     n->prox = p->topo;
     p->topo = n;
     p->cont++;
+	return p->topo;
 }
 
 //Checa se a pilha está vazia, retorna "1" se sim e "0" caso contrário
@@ -106,12 +107,13 @@ no* pop_p(pilha *p){
 }
 
 //Remove a pilha e todos os dados referentes a ela
-void destroy_p(pilha *p){
+pilha *destroy_p(pilha *p){
 	while(1 == 1){
 		if(isEmpty_p(p) == 1) break;
 		free(pop_p(p)); //Libera o espaço de memória do Nó enquanto desempilha-o
 	}
 	free(p);
+	return p;
 }
 
 //Busca elemento na pilha e retorna-o
@@ -381,7 +383,7 @@ void show_p(pilha *p,lista* l){
 	if(isEmpty_p(p) == 0){
     pilha* paux = create_p();
 		while(isEmpty_p(p)!=1){
-      no* aux = pop_p(p); 
+      no* aux = pop_p(p);
 			printf("[%lu,%lu,%c,%lu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
       update_frelat(l,aux);
 			push_p(paux,aux);
