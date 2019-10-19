@@ -5,7 +5,7 @@
 //Função para inicializar nó
 no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valor){
   no *n = (no*) malloc(sizeof(no));
-  if(n!=NULL){
+  if(n!=NULL){ //Testa a alocação
 	    n->cpf = cpf;
 	    n->cpft = cpft;
 	    n->valor = valor;

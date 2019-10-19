@@ -27,10 +27,12 @@ nol* create_nol(unsigned long int cpf){
 
 //Função para checar se lista está vazia (1 - Vazia / 0 - Não vazia)
 int isEmpty_l(lista* l){
-    if (l->primeiro == NULL)
+    if (l->primeiro == NULL){
         return 1;
-    else
+    }
+    else{
         return 0;
+    }
 }
 
 //Função para buscar elemento na lista (NULL - Se não encontrado)
@@ -49,7 +51,7 @@ nol* search_l(lista* l,unsigned long int k){
 }
 
 //Função para inserir elemento na lista, já ordenando-o
-void push_l(lista* l, nol* x){
+nol* push_l(lista* l, nol* x){
     if(isEmpty_l(l)==1){
         l->primeiro = x;
         l->primeiro->prox = x;
@@ -78,6 +80,7 @@ void push_l(lista* l, nol* x){
       }
     }
     l->cont++;
+    return x; //Retorna ponteiro para o elemento inserido
 }
 
 //Função para remover elemento da lista
@@ -122,9 +125,10 @@ nol* pop_l(lista* l, nol* k){
 }
 
 //Função para destruir lista e todo seu conteúdo
-void destroy_l(lista* l){
+lista* destroy_l(lista* l){
     while(l->primeiro != NULL){
         free(pop_l(l, l->primeiro)); //O "pop" sempre atualiza o primeiro da lista, logo funcionará até a lista se esvaziar
     }
     free(l);
+    return l; //Retorna o endereço para a pilha destruida, se destruiu corretamente, retorna NULL
 }
