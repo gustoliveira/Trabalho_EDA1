@@ -86,6 +86,9 @@ nol* push_l(lista* l, nol* x){
 //Função para remover elemento da lista
 nol* pop_l(lista* l, nol* k){
   if(isEmpty_l(l)==1) return NULL;
+  if(search_l(l, k->cpf)==NULL){
+    return NULL;
+  }
   if(l->cont == 1){
       nol* aux = l->primeiro;
       aux->prox = NULL;
