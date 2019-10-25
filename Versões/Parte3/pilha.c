@@ -2,8 +2,53 @@
 #include <stdio.h>
 #include "pilha.h"
 
+typedef struct no no;
+typedef struct pilha pilha;
+
+//Declaração do tipo nó
+struct no{
+    unsigned long int cpf,cpft;
+    long int valor;
+    char op;
+    no* prox;
+};
+
+//Declaração do tipo pilha
+struct pilha{
+    no* topo;
+    unsigned long int cont;
+};
+
+no *top_p(pilha *p){
+  return p->topo;
+}
+
+unsigned long int cont_p(pilha *p){
+  return p->cont;
+}
+
+unsigned long int cpf_p(no *n){
+	return n->cpf;
+}
+
+unsigned long int cpft_p(no *n){
+	return n->cpft;
+}
+
+long int valor_p(no *n){
+	return n->valor;
+}
+
+char op_p(no *n){
+  return n->op;
+}
+
+no *prox_p(no *n){
+  return n->prox;
+}
+
 //Função para inicializar nó
-no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valor){
+no* create_n(unsigned long int cpf, unsigned long int cpft, char op, long int valor){
   no *n = (no*) malloc(sizeof(no));
   if(n!=NULL){ //Testa a alocação
 	    n->cpf = cpf;

@@ -4,19 +4,14 @@
 typedef struct no no;
 typedef struct pilha pilha;
 
-//Declaração do tipo nó
-struct no{
-    unsigned long int cpf,cpft; //unsigned long int utilizado para suportar entrada <= 2^32-1
-    long int valor;
-    char op;
-    no* prox;
-};
+no *top_p(pilha *p);
+unsigned long int cont_p(pilha *p);
+unsigned long int cpf_p(no *n);
+unsigned long int cpft_p(no *n);
+long int valor_p(no *n);
+char op_p(no *n);
+no *prox_p(no *n);
 
-//Declaração do tipo pilha
-struct pilha{
-    no* topo;
-    unsigned long int cont;
-};
 
 //Função para criar nó
 //Recebe como argumento unsigned long int cpf(valor do cpf), unsigned long int cpft(cpf do terceiro),

@@ -4,19 +4,14 @@
 typedef struct lista lista;
 typedef struct nol nol;
 
-//Declaração do tipo nó para lista
-struct nol{
-    unsigned long int cpf,ops; //unsigned long int utilizado para suportar entrada <= 2^32-1
-    long int saldo;
-    nol* ant;
-    nol* prox;
-};
+unsigned long int cpf_l(nol *n);
+unsigned long int ops_l(nol *n);
+long int saldo_l(nol *n);
+nol *lPrimeiro(lista *l);
+unsigned long int cont(lista *l);
+nol *prox_l(nol *n);
+nol *ant_l(nol *n);
 
-//Definição do tipo lista
-struct lista{
-    nol* primeiro;
-    unsigned long int cont;
-};
 
 //Função para inicializar lista
 //Retorna um ponteiro contendo o endereço da lista

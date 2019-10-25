@@ -2,6 +2,50 @@
 #include <stdlib.h>
 #include "lista.h"
 
+typedef struct lista lista;
+typedef struct nol nol;
+
+//Declaração do tipo nó para lista
+struct nol{
+    unsigned long int cpf,ops; //unsigned long int utilizado para suportar entrada <= 2^32-1
+    long int saldo;
+    nol* ant;
+    nol* prox;
+};
+
+nol *prox_l(nol *n){
+  return n->prox;
+}
+
+nol *ant_l(nol *n){
+  return n->ant;
+}
+//Definição do tipo lista
+struct lista{
+    nol* primeiro;
+    unsigned long int cont;
+};
+
+unsigned long int cpf_l(nol *n){
+	return n->cpf;
+}
+
+unsigned long int ops_l(nol *n){
+	return n->ops;
+}
+
+long int saldo_l(nol *n){
+	return n->saldo;
+}
+
+nol *lPrimeiro(lista *l){
+	return l->primeiro;
+}
+
+unsigned long int cont_l(lista *l){
+	return l->cont;
+}
+
 //Função para inicializar lista
 lista* create_l(){
     lista* l = (lista*) malloc(sizeof(lista));
