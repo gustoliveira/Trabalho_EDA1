@@ -2,11 +2,18 @@
 #define FILA_H
 
 typedef struct fila fila;
+typedef struct no no;
 
-struct fila{
-	unsigned long int inicio,fim,qtd,tam;
-	no** vetor;
-};
+unsigned long int inicio_f(fila *f);
+unsigned long int fim_f(fila *f);
+unsigned long int qtd_f(fila *f);
+unsigned long int tam_f(fila *f);
+no** vetor_f(fila *f);
+unsigned long int cpf_f(no *n);
+unsigned long int cpft_f(no *n);
+long int valor_f(no *n);
+char op_f(no *n);
+no *prox_f(no *n);
 
 no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valor);
 fila* create_f(unsigned long int tamanho);

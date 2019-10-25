@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "pilha.h"
+#include <math.h>
+#include "fila.h"
 // #include "lista.h"
 
 int main(){
-    pilha *p = create_p();
+    fila *f = create_f(6*6);
     unsigned long int cpf, cpft;
     long int valor;
     char op;
@@ -36,26 +37,26 @@ int main(){
     no *ax5 = cliente5;
 
     //Empilha os nós de cada cliente imprime para testar
-    push_p(p, ax4);
-    push_p(p, ax2);
-    push_p(p, ax0);
-    push_p(p, ax5);
-    push_p(p, ax1);
-    push_p(p, ax3);
+    push_f(f, ax4);
+    push_f(f, ax2);
+    push_f(f, ax0);
+    push_f(f, ax5);
+    push_f(f, ax1);
+    push_f(f, ax3);
 
     // no *aux = lPrimeiro(l);
     // unsigned long int x = cpf_l(prox_l(aux));
     // printf("Teste: %ld\n", x);
 
-    while(isEmpty_p(p) == 0){
-        no *aux = top_p(p);
-        unsigned long int x = cpf_p(aux);
-        unsigned long int y = cpft_p(aux);
-        char o = op_p(aux);
-        long int v = valor_p(aux);
+    while(isEmpty_f(f) == 0){
+        no *aux = front_f(f);
+        unsigned long int x = cpf_f(aux);
+        unsigned long int y = cpft_f(aux);
+        char o = op_f(aux);
+        long int v = valor_f(aux);
 
         printf("Cpf: %lu Cpft: %lu Op: %c Valor: %ld\n", x, y, o, v);
-        pop_p(p);
+        pop_f(f);
         // if(isEmpty_l(l) == 1) break;
     }
     // printf("debug\n");
@@ -70,4 +71,3 @@ int main(){
 
     return 0;
 }
-

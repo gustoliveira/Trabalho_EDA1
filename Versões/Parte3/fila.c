@@ -3,10 +3,81 @@
 #include <math.h>
 #include "fila.h"
 
+//Quando for compilar, para usar biblioteca "math" tem que usar "-lm", talkei?
+
+typedef struct fila fila;
+typedef struct no no;
+
+struct fila{
+	unsigned long int inicio,fim,qtd,tam;
+	no** vetor;
+};
+
+struct no{
+    unsigned long int cpf,cpft;
+    long int valor;
+    char op;
+    no* prox;
+};
+
+unsigned long int inicio_f(fila *f){
+	return f->inicio;
+}
+
+unsigned long int fim_f(fila *f){
+	return f->fim;
+}
+
+unsigned long int qtd_f(fila *f){
+	return f->qtd;
+}
+
+unsigned long int tam_f(fila *f){
+	return f->tam;
+}
+
+no** vetor_f(fila *f){
+	return f->vetor;
+}
+
+unsigned long int cpf_f(no *n){
+	return n->cpf;
+}
+
+unsigned long int cpft_f(no *n){
+	return n->cpft;
+}
+
+long int valor_f(no *n){
+	return n->valor;
+}
+
+char op_f(no *n){
+  return n->op;
+}
+
+no *prox_f(no *n){
+  return n->prox;
+}
+
+no* create_n(unsigned long int cpf, unsigned long int cpft, char op, long int valor){
+  no *n = (no*) malloc(sizeof(no));
+  if(n!=NULL){ //Testa a alocação
+	    n->cpf = cpf;
+	    n->cpft = cpft;
+	    n->valor = valor;
+	    n->op = op;
+	    n->prox = NULL;
+	    return n;
+	}
+	else return NULL;
+
+}
+
 
 fila* create_f(unsigned long int tam0){
-	int tam1 = sqrt(tam0);
-	int tamanho = floor(tam1);
+	double tam1 = sqrt(tam0);
+	unsigned long int tamanho = floor(tam1);
 
 	fila* f = (fila*) malloc(sizeof(fila));
  	if(f!=NULL){
