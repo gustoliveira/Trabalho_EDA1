@@ -4,15 +4,6 @@
 typedef struct lista lista;
 typedef struct nol nol;
 
-unsigned long int cpf_l(nol *n);
-unsigned long int ops_l(nol *n);
-long int saldo_l(nol *n);
-nol *lPrimeiro(lista *l);
-unsigned long int cont(lista *l);
-nol *prox_l(nol *n);
-nol *ant_l(nol *n);
-
-
 //Função para inicializar lista
 //Retorna um ponteiro contendo o endereço da lista
 lista* create_l();
@@ -45,5 +36,40 @@ nol* pop_l(lista* l, nol* k);
 //Função para destruir lista e todo seu conteúdo
 //Recebe como argumento um ponteiro para a lista
 lista* destroy_l(lista* l);
+
+//Função para retornar o valor do cpf da lista
+//Recebe como argumento um ponteiro para o nó da lista
+//Retorna um unsigned long int contendo o valor do cpf
+unsigned long int cpf_l(nol *n);
+
+//Função para retornar a quantidade de operações de um certo cpf
+//Recebe como argumento um ponteiro para o nó da lista
+//Retorna um unsigned long int contendo a quantidade de operações
+unsigned long int ops_l(nol *n);
+
+//Função para retornar o saldo de um certo cpf
+//Recebe como argumento um ponteiro para o nó da lista
+//Retorna um long int contendo o saldo do nó da lista
+long int saldo_l(nol *n);
+
+//Função para retornar o primeiro elemento da lista
+//Recebe como argumento um ponteiro para a lista
+//Retorna um ponteiro do tipo nol para o primeiro nó da lista
+nol *lPrimeiro(lista *l);
+
+//Função para retornar o tamanho da lista
+//Recebe como argumento um ponteiro para a lista
+//Retorna um unsigned long int contendo o tamanho da lista
+unsigned long int cont(lista *l);
+
+//Função para retornar o proximo nó de um nó dado
+//Recebe como um argumento um nó da lista
+//Retorna um ponteiro para o próximo nó
+nol *prox_l(nol *n);
+
+//Função para retornar o nó anterior de um nó dado
+//Recebe como um argumento um nó da lista
+//Retorna um ponteiro para o nó anterior
+nol *ant_l(nol *n);
 
 #endif // PILHA_H
