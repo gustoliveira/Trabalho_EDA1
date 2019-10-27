@@ -26,7 +26,7 @@ nol* search_l(lista* l, unsigned long int k);
 //Função para inserir elemento na lista em um local de maneira que a lista sempre fica ordenada
 //Recebe como argumento um ponteiro para a lista e um ponteiro para o nó de lista que
 //Retorna um ponteiro para o nó inserido
-nol* push_l(lista* l, nol* x);
+void push_l(lista* l, nol* x);
 
 //Função para remover elemento da lista
 //Recebe como argumento um ponteiro para a lista e um nó para lista
@@ -35,7 +35,7 @@ nol* pop_l(lista* l, nol* k);
 
 //Função para destruir lista e todo seu conteúdo
 //Recebe como argumento um ponteiro para a lista
-lista* destroy_l(lista* l);
+void destroy_l(lista* l);
 
 //Função para retornar o valor do cpf da lista
 //Recebe como argumento um ponteiro para o nó da lista

@@ -33,7 +33,7 @@ void transfer(nol* cliente1, nol* cliente2, long int valor){
 //Função para enviar cliente para atendimento
 void attendance(unsigned long int ordem, no* cliente, pilha** vetor, int qt_guiche){
   int guiche = ordem%qt_guiche; //Cálculo do guiche para qual o cliente irá
-  push_p(vetor[guiche],cliente);
+  push_p(vetor[guiche], cliente);
 }
 
 //Função para atualizar/criar registros para lista do relatório final
@@ -74,10 +74,10 @@ void show_p(pilha *p,lista* l){
 }
 
 //Função para gerar/exibir relatório parcial e atualizar relatório final
-void show_relat_parc(pilha** vetor, int qt_guiche, lista* l){
+void show_relat_parc(pilha** vetor, unsigned long int qt_guiche, lista* l){
   //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
-  printf("-:| RELATÓRIO PARCIAL |:-\n%d\n",qt_guiche);
-    for(int i =0; i<qt_guiche; i++){
+  printf("-:| RELATÓRIO PARCIAL |:-\n%d\n", qt_guiche);
+    for(int i = 0; i < qt_guiche; i++){
     	printf("Guiche %d: %lu\n", i+1, cont_p(vetor[i]));
     	show_p(vetor[i], l);
     	destroy_p(vetor[i]);
@@ -96,7 +96,7 @@ void show_relat_final(lista* l){
 }
 
 //Cria e inicializa vetor de pilhas para funcionarem como guichê
-pilha** create_vet_p(int qt_guiches){
+pilha** create_vet_p(unsigned long int qt_guiches){
   pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*qt_guiches);
   if(vetor_pilhas != NULL){
     for(int i =0; i<qt_guiches;i++){
@@ -108,26 +108,26 @@ pilha** create_vet_p(int qt_guiches){
 }
 
 int main(){
-    int qt_guiches = 3; //Quantidade de guichês que serão disponibilizados para atendimento.
-	  unsigned long int n, cpf, cpft, valor;
+    // int qt_guiches = 3; //Quantidade de guichês que serão disponibilizados para atendimento.
+	  unsigned long int m, n, d, cpf, cpft, valor;
     char op;
-    scanf("%lu",&n); // Entrada de N
+    scanf("%lu %lu %lu", &n, &m, &d); // Entrada de N
     fila* f = create_f(n); //Cria fila com tamanho máximo igual à quantidade de inserts
     //Criação do cliente integrado à inserção na fila de atendimento
-    for(unsigned long int i = 0; i<n;i++){
+    for(unsigned long int i = 0; i < n; i++){
     	scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);
       no* cliente = create_n(cpf, cpft, op, valor);
-      push_f(f,cliente); //Envia clientes para fila de espera
+      push_f(f, cliente); //Envia clientes para fila de espera
     }
     //Vetor de ponteiros para pilhas (guiches)
-    pilha **vetor_pilhas = create_vet_p(qt_guiches);
+    pilha **vetor_pilhas = create_vet_p(m);
     lista* l = create_l(); //Criação da lista para relatório final
     for(unsigned long int k = 0; k<size_f(f);k++){
       no* aux = pop_f(f); //Pega primeiro elemento da fila
-      attendance(k,aux,vetor_pilhas,qt_guiches); //Envia primeiro elemento da fila para atendimento
+      attendance(k, aux, vetor_pilhas, m); //Envia primeiro elemento da fila para atendimento
     }
     //Chamada para a função de exibição do relatório Parcial
-    show_relat_parc(vetor_pilhas,qt_guiches,l);
+    show_relat_parc(vetor_pilhas, m, l);
      //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
 
