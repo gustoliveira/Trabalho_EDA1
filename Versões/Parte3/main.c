@@ -79,7 +79,7 @@ void show_p(pilha *p, lista* l){
 //Função para gerar/exibir relatório parcial e atualizar relatório final
 void show_relat_diario(pilha** vetor, unsigned long int qt_guiche, lista* l, int i){
   	//Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
-  	printf("-:| RELATÓRIO DIARIO %d |:-\n%lu\n", i+1, qt_guiche);
+  	printf("-:| RELATORIO DIARIO %d |:-\n%lu\n", i+1, qt_guiche);
     for(unsigned long int j = 0; j < qt_guiche; j++){
 		// if(isEmpty_f(f) != 1){
     		printf("Guiche %ld: %lu\n", j+1, cont_p(vetor[j]));
@@ -94,7 +94,7 @@ void show_relat_diario(pilha** vetor, unsigned long int qt_guiche, lista* l, int
 //Função para exibir relatório final
 void show_relat_final(lista* l){
   //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada lista
-  printf("\n-:| RELATÓRIO FINAL |:-\n %lu\n", cont_l(l));
+  printf("\n-:| RELATORIO FINAL |:-\n%lu\n", cont_l(l));
     nol* aux = lPrimeiro(l);
     while(aux!=NULL){
       printf("-:[ %lu : %lu %li\n", cpf_l(aux),ops_l(aux),saldo_l(aux));
@@ -128,8 +128,6 @@ int main(){
     	push_f(f, cliente); //Envia clientes para fila de espera
     }
 
-	unsigned long int tam = tam_f(f);
-	printf("%lu\n", tam);
 
     lista* l = create_l(); //Criação da lista para relatório final
 

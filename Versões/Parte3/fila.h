@@ -7,7 +7,7 @@ typedef struct fila fila;
 //Função para criar fila
 //Recebe como argumento um unsigned long int contendo o tamanho da fila
 //Retorna ponteiro contendo o endereço da fila
-fila* create_f(unsigned long int tamanho);
+fila* create_f(unsigned long int tam0);
 
 //Função para verificar se a fila está cheia ou não
 //Recebe como argumento um ponteiro para a fila
