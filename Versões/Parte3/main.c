@@ -6,7 +6,7 @@ João Lucas Lima de Melo
 #include <stdlib.h>
 #include <math.h>
 #include "no.h"
-#include "lista.h"
+#include "listaCirc.h"
 #include "fila.h"
 #include "pilha.h"
 
@@ -81,13 +81,8 @@ void show_relat_diario(pilha** vetor, unsigned long int qt_guiche, lista* l, int
   	//Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
   	printf("-:| RELATORIO DIARIO %d |:-\n%lu\n", i+1, qt_guiche);
     for(unsigned long int j = 0; j < qt_guiche; j++){
-		// if(isEmpty_f(f) != 1){
     		printf("Guiche %ld: %lu\n", j+1, cont_p(vetor[j]));
     		show_p(vetor[j], l);
-		// }
-		// else{
-			// printf("Guiche %ld: 0\n", j+1);
-		// }
     }
 }
 
@@ -114,29 +109,52 @@ pilha** create_vet_p(unsigned long int qt_guiches){
   else return NULL;
 }
 
+//Cria e inicializa vetor de filas para funcionarem como gerenciadores de clientes
+//x quantidade de filas
+fila** create_vet_f(unsigned long int d, unsigned long int n){
+  unsigned long int x = ceil(n/floor(sqrt(d)));
+  fila **vetor_filas = (fila**) malloc(sizeof(fila*)*x);
+  if(vetor_filas != NULL){
+    for(unsigned long int i =0; i < x; i++){
+      vetor_filas[i] = create_f(d);
+    }
+    return vetor_filas;
+  }
+  else return NULL;
+}
+
 int main(){
     // int qt_guiches = 3; //Quantidade de guichês que serão disponibilizados para atendimento.
-	unsigned long int m, n, d, cpf, cpft, valor;
+	  unsigned long int m, n, d, cpf, cpft, valor;
     char op;
+    int j = 0;
     scanf("%lu %lu %lu", &n, &m, &d); // Entrada de N
 
-    fila* f = create_f(n); //Cria fila com tamanho máximo igual à quantidade de inserts
+    fila** vetor_filas = create_vet_f(d, n); //Cria fila com tamanho máximo igual à quantidade de inserts
     //Criação do cliente integrado à inserção na fila de atendimento
     for(unsigned long int i = 0; i < n; i++){
     	scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);
     	no* cliente = create_n(cpf, cpft, op, valor);
-    	push_f(f, cliente); //Envia clientes para fila de espera
+      if(full_f(vetor_filas[j])==1){
+        j++;
+      }
+    	push_f(vetor_filas[j], cliente); //Envia clientes para fila de espera
     }
 
+    int final = j;
+    j = 0;
 
     lista* l = create_l(); //Criação da lista para relatório final
 
-	for(int i = 0; isEmpty_f(f) == 0; i++){
+	for(int i = 0; isEmpty_f(vetor_filas[final]) == 0; i++){
 	    pilha **vetor_pilhas = create_vet_p(m); //Vetor de ponteiros para pilhas (guiches)
 		for(unsigned long int k = 0; k < d; k++){
-			no* aux = pop_f(f); //Pega primeiro elemento da fila
+      if(isEmpty_f(vetor_filas[j])==1){
+        j++;
+      }
+			no* aux = pop_f(vetor_filas[j]); //Pega primeiro elemento da fila
 			attendance(k, aux, vetor_pilhas, m); //Envia primeiro elemento da fila para atendimento
-			if(isEmpty_f(f) == 1) break;
+			if(isEmpty_f(vetor_filas[final]) == 1) break;
 		}
 		show_relat_diario(vetor_pilhas, m, l, i);
     	free(vetor_pilhas);
@@ -145,7 +163,9 @@ int main(){
     //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
 
-    destroy_f(f);
+    for(int i = 0; i < final; i++){
+      free(vetor_filas[i]);
+    }
     destroy_l(l);
 
 }

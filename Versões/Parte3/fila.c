@@ -62,8 +62,7 @@ no *prox_f(no *n){
 }
 
 fila* create_f(unsigned long int tam0){
-	double tam1 = sqrt(tam0);
-	unsigned long int tamanho = floor(tam1);
+	unsigned long int tamanho = floor(sqrt(tam0));
 
 	fila* f = (fila*) malloc(sizeof(fila));
  	if(f!=NULL){

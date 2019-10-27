@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lista.h"
+#include "listaCirc.h"
 
 typedef struct lista lista;
 typedef struct nol nol;
