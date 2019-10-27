@@ -72,4 +72,12 @@ nol *prox_l(nol *n);
 //Retorna um ponteiro para o nó anterior
 nol *ant_l(nol *n);
 
+void saldo_l_add(nol* n, long int valor);
+
+void saldo_l_sub(nol* n, long int valor);
+
+void ops_l_add(nol* n);
+
+unsigned long int cont_l(lista *l);
+
 #endif // PILHA_H

@@ -1,14 +1,8 @@
 #ifndef PILHA_H
 #define PILHA_H
 
-typedef struct no no;
 typedef struct pilha pilha;
-
-//Função para criar nó
-//Recebe como argumento unsigned long int cpf(valor do cpf), unsigned long int cpft(cpf do terceiro),
-//char op(caractere informando a operação), long int valor(valor da operação)
-//Retorna um ponteiro para o nó criado
-no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valor);
+typedef struct no no;
 
 //Função para criar pilha
 //Retorna ponteiro contendo o endereço da pilha

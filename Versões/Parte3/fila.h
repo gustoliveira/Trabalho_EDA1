@@ -1,14 +1,8 @@
 #ifndef FILA_H
 #define FILA_H
 
-typedef struct fila fila;
 typedef struct no no;
-
-//Função para criar nó
-//Recebe como argumento unsigned long int cpf(valor do cpf), unsigned long int cpft(cpf do terceiro),
-//char op(caractere informando a operação), long int valor(valor da operação)
-//Retorna um ponteiro para o nó criado
-no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valor);
+typedef struct fila fila;
 
 //Função para criar fila
 //Recebe como argumento um unsigned long int contendo o tamanho da fila

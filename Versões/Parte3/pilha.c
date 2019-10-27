@@ -1,22 +1,22 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "no.h"
 #include "pilha.h"
 
-typedef struct no no;
 typedef struct pilha pilha;
-
-//Declaração do tipo nó
-struct no{
-    unsigned long int cpf,cpft;
-    long int valor;
-    char op;
-    no* prox;
-};
+typedef struct no no;
 
 //Declaração do tipo pilha
 struct pilha{
     no* topo;
     unsigned long int cont;
+};
+
+struct no{
+    unsigned long int cpf,cpft;
+    long int valor;
+    char op;
+    no* prox;
 };
 
 no *top_p(pilha *p){
@@ -45,21 +45,6 @@ char op_p(no *n){
 
 no *prox_p(no *n){
   return n->prox;
-}
-
-//Função para inicializar nó
-no* create_n(unsigned long int cpf, unsigned long int cpft, char op, long int valor){
-  no *n = (no*) malloc(sizeof(no));
-  if(n!=NULL){ //Testa a alocação
-	    n->cpf = cpf;
-	    n->cpft = cpft;
-	    n->valor = valor;
-	    n->op = op;
-	    n->prox = NULL;
-	    return n;
-	}
-	else return NULL;
-
 }
 
 //Função para inicializar pilha

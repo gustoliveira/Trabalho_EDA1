@@ -13,6 +13,18 @@ struct nol{
     nol* prox;
 };
 
+void saldo_l_add(nol* n, long int valor){
+	n->saldo += valor;
+}
+
+void saldo_l_sub(nol* n, long int valor){
+	n->saldo -= valor;
+}
+
+void ops_l_add(nol* n){
+	n->ops++;
+}
+
 nol *prox_l(nol *n){
   return n->prox;
 }

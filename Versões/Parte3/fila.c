@@ -1,23 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "no.h"
 #include "fila.h"
 
 //Quando for compilar, para usar biblioteca "math" tem que usar "-lm", talkei?
 
-typedef struct fila fila;
 typedef struct no no;
-
-struct fila{
-	unsigned long int inicio,fim,qtd,tam;
-	no** vetor;
-};
+typedef struct fila fila;
 
 struct no{
     unsigned long int cpf,cpft;
     long int valor;
     char op;
     no* prox;
+};
+
+struct fila{
+	unsigned long int inicio,fim,qtd,tam;
+	no** vetor;
 };
 
 unsigned long int inicio_f(fila *f){
@@ -59,21 +60,6 @@ char op_f(no *n){
 no *prox_f(no *n){
   return n->prox;
 }
-
-no* create_n(unsigned long int cpf, unsigned long int cpft, char op, long int valor){
-  no *n = (no*) malloc(sizeof(no));
-  if(n!=NULL){ //Testa a alocação
-	    n->cpf = cpf;
-	    n->cpft = cpft;
-	    n->valor = valor;
-	    n->op = op;
-	    n->prox = NULL;
-	    return n;
-	}
-	else return NULL;
-
-}
-
 
 fila* create_f(unsigned long int tam0){
 	double tam1 = sqrt(tam0);
