@@ -4,6 +4,7 @@ João Lucas Lima de Melo
 */
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "no.h"
 #include "lista.h"
 #include "fila.h"
@@ -59,28 +60,34 @@ void update_frelat(lista*l, no* cliente){
 
 //Exibe as informações referente a pilha desejada, retirando o topo, lendo-o e adicionando à uma fila auxiliar, depois a pilha original retorna a
 //seu estado inicial (Além disso enquanto exibe atualiza o relatório final)
-void show_p(pilha *p,lista* l){
+void show_p(pilha *p, lista* l){
 	if(isEmpty_p(p) == 0){
-    pilha* paux = create_p();
+		pilha* paux = create_p();
 		while(isEmpty_p(p)!=1){
-      no* aux = pop_p(p);
+			no* aux = pop_p(p);
 			printf("[%lu,%lu,%c,%lu]\n",cpf_p(aux),cpft_p(aux),op_p(aux),valor_p(aux));
-      update_frelat(l,aux);
+			update_frelat(l,aux);
 			push_p(paux,aux);
 		}
-    while(isEmpty_p(paux)!=1) push_p(p,pop_p(paux));
-    free(paux);
+		while(isEmpty_p(paux) != 1) {
+			push_p(p,pop_p(paux));
+		}
+		free(paux);
 	}
 }
 
 //Função para gerar/exibir relatório parcial e atualizar relatório final
-void show_relat_parc(pilha** vetor, unsigned long int qt_guiche, lista* l){
-  //Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
-  printf("-:| RELATÓRIO PARCIAL |:-\n%d\n", qt_guiche);
-    for(int i = 0; i < qt_guiche; i++){
-    	printf("Guiche %d: %lu\n", i+1, cont_p(vetor[i]));
-    	show_p(vetor[i], l);
-    	destroy_p(vetor[i]);
+void show_relat_diario(pilha** vetor, unsigned long int qt_guiche, lista* l, int i){
+  	//Formatação da saída, utilização da função de exibição para exibir todos os dados de determinada pilha
+  	printf("-:| RELATÓRIO DIARIO %d |:-\n%lu\n", i+1, qt_guiche);
+    for(unsigned long int j = 0; j < qt_guiche; j++){
+		// if(isEmpty_f(f) != 1){
+    		printf("Guiche %ld: %lu\n", j+1, cont_p(vetor[j]));
+    		show_p(vetor[j], l);
+		// }
+		// else{
+			// printf("Guiche %ld: 0\n", j+1);
+		// }
     }
 }
 
@@ -99,7 +106,7 @@ void show_relat_final(lista* l){
 pilha** create_vet_p(unsigned long int qt_guiches){
   pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*qt_guiches);
   if(vetor_pilhas != NULL){
-    for(int i =0; i<qt_guiches;i++){
+    for(unsigned long int i =0; i < qt_guiches; i++){
       vetor_pilhas[i] = create_p();
     }
     return vetor_pilhas;
@@ -109,29 +116,37 @@ pilha** create_vet_p(unsigned long int qt_guiches){
 
 int main(){
     // int qt_guiches = 3; //Quantidade de guichês que serão disponibilizados para atendimento.
-	  unsigned long int m, n, d, cpf, cpft, valor;
+	unsigned long int m, n, d, cpf, cpft, valor;
     char op;
     scanf("%lu %lu %lu", &n, &m, &d); // Entrada de N
+
     fila* f = create_f(n); //Cria fila com tamanho máximo igual à quantidade de inserts
     //Criação do cliente integrado à inserção na fila de atendimento
     for(unsigned long int i = 0; i < n; i++){
     	scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);
-      no* cliente = create_n(cpf, cpft, op, valor);
-      push_f(f, cliente); //Envia clientes para fila de espera
+    	no* cliente = create_n(cpf, cpft, op, valor);
+    	push_f(f, cliente); //Envia clientes para fila de espera
     }
-    //Vetor de ponteiros para pilhas (guiches)
-    pilha **vetor_pilhas = create_vet_p(m);
+
+	unsigned long int tam = tam_f(f);
+	printf("%lu\n", tam);
+
     lista* l = create_l(); //Criação da lista para relatório final
-    for(unsigned long int k = 0; k<size_f(f);k++){
-      no* aux = pop_f(f); //Pega primeiro elemento da fila
-      attendance(k, aux, vetor_pilhas, m); //Envia primeiro elemento da fila para atendimento
-    }
-    //Chamada para a função de exibição do relatório Parcial
-    show_relat_parc(vetor_pilhas, m, l);
-     //Chamada para a função de exibição do relatório Final
+
+	for(int i = 0; isEmpty_f(f) == 0; i++){
+	    pilha **vetor_pilhas = create_vet_p(m); //Vetor de ponteiros para pilhas (guiches)
+		for(unsigned long int k = 0; k < d; k++){
+			no* aux = pop_f(f); //Pega primeiro elemento da fila
+			attendance(k, aux, vetor_pilhas, m); //Envia primeiro elemento da fila para atendimento
+			if(isEmpty_f(f) == 1) break;
+		}
+		show_relat_diario(vetor_pilhas, m, l, i);
+    	free(vetor_pilhas);
+	}
+
+    //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
 
-    free(vetor_pilhas);
     destroy_f(f);
     destroy_l(l);
 
