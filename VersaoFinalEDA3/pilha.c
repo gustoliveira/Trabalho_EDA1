@@ -19,34 +19,6 @@ struct no{
     no* prox;
 };
 
-no *top_p(pilha *p){
-  return p->topo;
-}
-
-unsigned long int cont_p(pilha *p){
-  return p->cont;
-}
-
-unsigned long int cpf_p(no *n){
-	return n->cpf;
-}
-
-unsigned long int cpft_p(no *n){
-	return n->cpft;
-}
-
-long int valor_p(no *n){
-	return n->valor;
-}
-
-char op_p(no *n){
-  return n->op;
-}
-
-no *prox_p(no *n){
-  return n->prox;
-}
-
 //Função para inicializar pilha
 pilha* create_p(){
   pilha *p = (pilha*) malloc(sizeof(pilha));
@@ -66,7 +38,7 @@ no* push_p(pilha *p, no *n){
 	return p->topo;
 }
 
-//Checa se a pilha está vazia, retorna "1" se sim e "0" caso contrário
+//Checa se a pilha está vazia
 int isEmpty_p(pilha *p){
     if(p->topo == NULL){
         return 1;
@@ -76,7 +48,7 @@ int isEmpty_p(pilha *p){
     }
 }
 
-//Desempilha elemento do topo da pilha referente, retorna NULL se pilha estiver vazia
+//Desempilha elemento do topo da pilha
 no* pop_p(pilha *p){
 	if(isEmpty_p(p) == 1){
         return NULL;
@@ -94,36 +66,70 @@ no* pop_p(pilha *p){
 pilha *destroy_p(pilha *p){
 	while(1 == 1){
 		if(isEmpty_p(p) == 1) break;
-		free(pop_p(p)); //Libera o espaço de memória do Nó enquanto desempilha-o
+		free(pop_p(p));
 	}
 	free(p);
 	return p;
 }
 
 //Busca elemento na pilha e retorna-o
+//A função retira do topo da pilha e aloca em uma pilha auxiliar, para poder buscar no topo da pilha se o elemento existe. Findado o processo de busca
+//os valores da pilha auxiliar retornam à fila principal
 no* search_p(pilha* p, unsigned long int cpf){
-  //A função retira do topo da pilha e aloca em uma pilha auxiliar, para poder buscar no topo da pilha se o elemento existe. Findado o processo de busca
-  //os valores da pilha auxiliar retornam à fila principal
-  pilha* paux = (pilha*) malloc(sizeof(pilha));
-  if(paux !=NULL){
-    int flag = 0;
-    no* resultado = NULL;
-    if (isEmpty_p(p)==0){
-      while(p->cont>0){
-        no* aux = pop_p(p);
-        if(aux->cpf == cpf && flag == 0){
-          resultado = aux;
-          flag = 1;
-        }
-        push_p(paux,aux);
-      }
-    }
-    while(paux->cont>0){
-      push_p(p,pop_p(paux));
-    }
-    free(paux);
-    return resultado;
-  }
-  else return NULL;
+	pilha* paux = (pilha*)malloc(sizeof(pilha));
+	if(paux !=NULL){
+		int flag = 0;
+		no* resultado = NULL;
+		if (isEmpty_p(p)==0){
+			while(p->cont > 0){
+				no* aux = pop_p(p);
+				if(aux->cpf == cpf && flag == 0){
+					resultado = aux;
+					flag = 1;
+				}
+				push_p(paux,aux);
+			}
+		}
+		while(paux->cont>0){
+			push_p(p,pop_p(paux));
+		}
+		free(paux);
+		return resultado;
+	}
+	else return NULL;
 }
 
+//Função para retornar topo da pilha
+no *top_p(pilha *p){
+  	return p->topo;
+}
+
+//Função para retornar tamanho da pilha
+unsigned long int cont_p(pilha *p){
+ 	return p->cont;
+}
+
+//Função para retornar cpf do nó
+unsigned long int cpf_p(no *n){
+	return n->cpf;
+}
+
+//Função para retornar cpft do nó
+unsigned long int cpft_p(no *n){
+	return n->cpft;
+}
+
+//Função para retornar valor do nó
+long int valor_p(no *n){
+	return n->valor;
+}
+
+//Função para retornar operação do nó
+char op_p(no *n){
+  	return n->op;
+}
+
+//Função para retornar nó prox do nó dado
+no *prox_p(no *n){
+  	return n->prox;
+}

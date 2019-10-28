@@ -67,14 +67,33 @@ unsigned long int qtd_f(fila *f);
 //Retorna um unsigened long int contendo o tamanho da fila
 unsigned long int tam_f(fila *f);
 
-//
+//Função para retornar ponteiro para vetor de ponteiros da fila
 //Recebe como argumento um ponteiro para a fila
 no** vetor_f(fila *f);
 
+//Função para retornar cpf do nó dado
+//Recebe como argumento um ponteiro para o nó
+//Retorna um unsigned long int contendo o cpf do nó
 unsigned long int cpf_f(no *n);
+
+//Função para retornar cpft do nó dado
+//Recebe como argumento um ponteiro para o nó
+//Retorna um unsigned long int contendo o cpft do nó
 unsigned long int cpft_f(no *n);
+
+//Função para retornar o valor do nó dado
+//Recebe como argumento um ponteiro para o nó
+//Retorna um long int contendo o valor do nó
 long int valor_f(no *n);
+
+//Função para retornar a operação do nó dado
+//Recebe como argumento um ponteiro para o nó
+//Retorna um char contendo a operação do nó
 char op_f(no *n);
+
+//Função para retornar o proximo nó do nó dado
+//Recebe como argumento um ponteiro para o nó
+//Retorna um ponteiro para o proximo nó
 no *prox_f(no *n);
 
 #endif // FILA_H

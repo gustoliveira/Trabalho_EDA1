@@ -4,8 +4,8 @@
 typedef struct no no;
 
 //Função para criar nó
-//Recebe como argumento unsigned long int cpf(valor do cpf), unsigned long int cpft(cpf do terceiro),
-//char op(caractere informando a operação), long int valor(valor da operação)
+//Recebe como argumento unsigned long int cpf, unsigned long int cpft,
+//char op, long int valor
 //Retorna um ponteiro para o nó criado
 no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valor);
 
