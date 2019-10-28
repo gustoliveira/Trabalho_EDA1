@@ -114,6 +114,15 @@ pilha** create_vet_p(unsigned long int qt_guiches){
 	else return NULL;
 }
 
+//Desaloca toda a memória e destrói todos os dados do vetor de pilhas
+void destroy_vet_p(pilha** vetor_pilhas, unsigned long int m){
+	for(unsigned long int a = 0; a < m; a++){
+		destroy_p(vetor_pilhas[a]);
+	}
+	free(vetor_pilhas);
+
+}
+
 //Cria e inicializa vetor de filas para funcionarem como gerenciadores de clientes
 fila** create_vet_f(unsigned long int d, unsigned long int n){
 	unsigned long int x = ceil(n/floor(sqrt(d))); //Quantidade de filas
@@ -127,50 +136,57 @@ fila** create_vet_f(unsigned long int d, unsigned long int n){
 	else return NULL;
 }
 
-int main(){
-	unsigned long int m, n, d, cpf, cpft, valor, j = 0;
-    char op;
-    scanf("%lu %lu %lu", &n, &m, &d); // Entrada de n, m, d
-
-    fila** vetor_filas = create_vet_f(d, n); //Cria fila com tamanho máximo igual à quantidade de inserts
-    //Criação do cliente integrado à inserção na fila de atendimento
-    for(unsigned long int i = 0; i < n; i++){
-		scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);
-		no* cliente = create_n(cpf, cpft, op, valor);
-
-		if(full_f(vetor_filas[j])==1) j++;
-
-		push_f(vetor_filas[j], cliente); //Envia clientes para fila de espera
-    }
-
-    unsigned long int final = j;
-    j = 0;
-
-    lista* l = create_l(); //Criação da lista para relatório final
-
-	for(unsigned long int i = 0; isEmpty_f(vetor_filas[final]) == 0; i++){
-		pilha **vetor_pilhas = create_vet_p(m); //Vetor de ponteiros para pilhas (guiches)
-		for(unsigned long int k = 0; k < d; k++){
-			if(isEmpty_f(vetor_filas[j])==1) j++;
-			no* aux = pop_f(vetor_filas[j]); //Pega primeiro elemento da fila
-			attendance(k, aux, vetor_pilhas, m); //Envia primeiro elemento da fila para atendimento
-			if(isEmpty_f(vetor_filas[final]) == 1) break;
-		}
-		show_relat_diario(vetor_pilhas, m, l, i);
-		for(unsigned long int a = 0; a < m; a++){
-			destroy_p(vetor_pilhas[a]);
-		}
-		free(vetor_pilhas);
-	}
-
-    //Chamada para a função de exibição do relatório Final
-    show_relat_final(l);
-
-    for(int i = 0; i < ceil(n/floor(sqrt(d))); i++){
+//Desaloca toda a memória e destrói todos os dados do vetor de filas
+void destroy_vet_f(fila** vetor_filas, unsigned long int n, unsigned long int d){
+	for(int i = 0; i < ceil(n/floor(sqrt(d))); i++){
       	destroy_f(vetor_filas[i]);
     }
     free(vetor_filas);
+}
 
-    destroy_l(l);
+int main(){
+	//Declaração de variáveis
+	unsigned long int m, n, d, cpf, cpft, valor, j = 0;
+    char op;
 
+    scanf("%lu %lu %lu", &n, &m, &d); 	//Entrada de n, m, d
+
+	//Cria vetor fila com tamanho igual à quantidade de floor(sqrt(d))
+    fila** vetor_filas = create_vet_f(d, n); //Vetor é para comportar todos os inserts
+
+	//Lê todos os clientes e coloca-os nas filas
+    for(unsigned long int i = 0; i < n; i++){
+		scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);	//Lê valor
+		no* cliente = create_n(cpf, cpft, op, valor);		//Cria nó para o valor
+
+		if(full_f(vetor_filas[j])==1) j++;					//Se a fila estiver cheia, passa para a proxima do vetor de filas
+
+		push_f(vetor_filas[j], cliente); 					//Envia clientes para fila de espera que não está cheia
+    }
+
+    unsigned long int final = j; 	//Final é o tamanho total do vetor de filas
+    j = 0;							//Zera j para utiliza-la novamente para percorrer o vetor de filas
+
+    lista* l = create_l(); //Criação da lista que contem os cpf para relatório final
+
+	//Faz o atendimento de todos os clientes
+	for(unsigned long int i = 0; isEmpty_f(vetor_filas[final]) == 0; i++){
+		pilha **vetor_pilhas = create_vet_p(m); 	//Vetor de ponteiros para pilhas (guiches)
+		for(unsigned long int k = 0; k < d; k++){
+			if(isEmpty_f(vetor_filas[j]) == 1)  j++; 	//Se a fila em questão está vazia, passa para a proxima do vetor de filas
+
+			no* aux = pop_f(vetor_filas[j]); 		//Pega primeiro elemento da fila
+			attendance(k, aux, vetor_pilhas, m); 	//Envia primeiro elemento da fila para atendimento e faz sua operação
+
+			if(isEmpty_f(vetor_filas[final]) == 1) break;	//Se a ultima fila do vetor está vazia, não tem mais nenhum cliente a ser atendido
+		}
+
+		show_relat_diario(vetor_pilhas, m, l, i); //Chamada para a função de exibição do relatório diario
+		destroy_vet_p(vetor_pilhas, m); //Chamada da função para destruir vetor de pilhas
+	}
+
+    show_relat_final(l); //Chamada para a função de exibição do relatório Final
+
+	destroy_vet_f(vetor_filas, n, d); //Chamada da função para destruir vetor de filas
+    destroy_l(l); //Destruir a lista
 }
