@@ -170,8 +170,7 @@ int main(){
     //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
 
-
-    for(int i = 0; i < final; i++){
+    for(int i = 0; i < ceil(n/floor(sqrt(d))); i++){
       destroy_f(vetor_filas[i]);
     }
     free(vetor_filas);
