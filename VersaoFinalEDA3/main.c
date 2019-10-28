@@ -161,12 +161,12 @@ int main(){
 			if(isEmpty_f(vetor_filas[final]) == 1) break;
 		}
 		show_relat_diario(vetor_pilhas, m, l, i);
-    	/*for(unsigned long int a = 0; a<m; a++){
+      for(unsigned long int a=0; a<m; a++){
         destroy_p(vetor_pilhas[a]);
-      }*/
-      destroy_p(*vetor_pilhas);
+      }
+      free(vetor_pilhas);
 	}
-
+  
     //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
 
@@ -174,7 +174,7 @@ int main(){
     for(int i = 0; i < final; i++){
       destroy_f(vetor_filas[i]);
     }
-    //destroy_f(*vetor_filas);
+    free(vetor_filas);
     
     destroy_l(l);
 
