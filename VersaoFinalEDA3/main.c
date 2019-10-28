@@ -72,7 +72,7 @@ void show_p(pilha *p, lista* l){
 		while(isEmpty_p(paux) != 1) {
 			push_p(p,pop_p(paux));
 		}
-		free(paux);
+		destroy_p(paux);
 	}
 }
 
@@ -96,7 +96,7 @@ void show_relat_final(lista* l){
       while(isEmpty_l(l)==0){
       printf("-:[ %lu : %lu %li\n", cpf_l(aux),ops_l(aux),saldo_l(aux));
       aux1 = prox_l(aux);
-      pop_l(l, aux);
+      free(pop_l(l, aux));
       aux = aux1;
     }
 }
@@ -161,17 +161,21 @@ int main(){
 			if(isEmpty_f(vetor_filas[final]) == 1) break;
 		}
 		show_relat_diario(vetor_pilhas, m, l, i);
-    	free(vetor_pilhas);
+    	/*for(unsigned long int a = 0; a<m; a++){
+        destroy_p(vetor_pilhas[a]);
+      }*/
+      destroy_p(*vetor_pilhas);
 	}
 
     //Chamada para a função de exibição do relatório Final
     show_relat_final(l);
 
-    //printf("%lu\n", cont_l(l));
 
     for(int i = 0; i < final; i++){
-      free(vetor_filas[i]);
+      destroy_f(vetor_filas[i]);
     }
+    //destroy_f(*vetor_filas);
+    
     destroy_l(l);
 
 }
