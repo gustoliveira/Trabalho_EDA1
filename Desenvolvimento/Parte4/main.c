@@ -19,20 +19,27 @@ int main(){
 
     printf("Inserindo nó: %d\n", codCliente(a0));
     insereAVL(arv, raiz(arv), a0);
+
     printf("Inserindo nó: %d\n", codCliente(a1));
     insereAVL(arv, raiz(arv), a1);
+
     printf("Inserindo nó: %d\n", codCliente(a2));
     insereAVL(arv, raiz(arv), a2);
+
     printf("Inserindo nó: %d\n", codCliente(a3));
     insereAVL(arv, raiz(arv), a3);
+
     printf("Inserindo nó: %d\n", codCliente(a4));
     insereAVL(arv, raiz(arv), a4);
+
     printf("Inserindo nó: %d\n", codCliente(a5));
     insereAVL(arv, raiz(arv), a5);
+
     printf("Inserindo nó: %d\n", codCliente(a6));
     insereAVL(arv, raiz(arv), a6);
-    // printf("Inserindo nó: %d\n", codCliente(a7));
-    // insereAVL(arv, raiz(arv), a7);
+
+    printf("Inserindo nó: %d\n", codCliente(a7));
+    insereAVL(arv, raiz(arv), a7);
 
 
     printf("\nTamanho da arvore: %d\n", size(arv));
@@ -43,7 +50,8 @@ int main(){
 
     printf("\nInOrdem: "); InOrdem(raiz(arv));
 
-    printf("\n\n%d\n\n", codCliente(noEsq(a2)));
+    printf("\n\n%d\n\n", codCliente(noPai(a2)));
+    printf("\n\n%d\n\n", codCliente(noDir(a0)));
     return 0;
 }
 

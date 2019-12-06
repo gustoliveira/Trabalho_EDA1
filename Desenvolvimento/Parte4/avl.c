@@ -222,57 +222,49 @@ int saldo_sub(no* n, int valor){
 }
 
 no *rotacaoSimplesEsq(arvore *T, no *x){
-    no *y = x->dir;
+    no* y = x->dir;
     x->dir = y->esq;
-    if(T->raiz == x){
-        T->raiz = y;
-    }
 
-    if(x->pai != NULL){
-        if(x == x->pai->esq){
-            x->pai->esq = y;
-        }
-        else if(x == x->pai->dir){
-            x->pai->dir = y;
-        }
-    }
-    if(x->dir != NULL) x->dir->pai = x;
+    if (y->esq != NULL) y->esq->pai = x;
 
     y->esq = x;
     y->pai = x->pai;
-    x->pai = y;
 
-    // x->altura = altura(x);
-    // y->altura = altura(y);
-
-    return y;
-}
-
-no *rotacaoSimplesDir(arvore *T, no *x){
-    no *y = x->esq;
-    x->esq = y->dir;
-
-    if(T->raiz == x){
-        T->raiz = y;
-    }
-    if(x->pai != NULL){
-        if(x == x->pai->esq){
-            x->pai->esq = y;
-        }
-        else{
-            x->pai->dir = y;
-        }
+    if (T->raiz == x) T->raiz = y;
+    else{
+        if (x->pai->dir == x) x->pai->dir = y;
+        else x->pai->esq = y;
     }
 
-    if(x->esq != NULL) x->esq->pai = x;
     x->pai = y;
-    y->dir = x;
-    y->pai = x->pai;
 
     x->altura = altura(x);
     y->altura = altura(y);
 
-    return y;
+    return x;
+}
+
+no *rotacaoSimplesDir(arvore *T, no *x){
+    no* y = x->esq;
+    x->esq = y->dir;
+
+    if (y->dir != NULL) y->dir->pai = x;
+
+    y->dir = x;
+    y->pai = x->pai;
+
+    if (T->raiz == x) T->raiz = y;
+    else{
+        if (x->pai->dir == x) x->pai->dir = y;
+        else x->pai->esq = y;
+    }
+
+    x->pai = y;
+
+    x->altura = altura(x);
+    y->altura = altura(y);
+
+    return x;
 }
 
 no *rotacaoDuplaEsq(arvore *T, no *x){
@@ -303,14 +295,15 @@ int balanco(no *n){
     return altura_no(n->esq)-altura_no(n->dir);
 }
 
-no *noEsq(no *n){
-    return n->esq;
+no *noPai(no *n){
+    return n->pai;
+}
+no *noDir(no *n){
+    return n->dir;
 }
 
-void balanceamento(arvore* T, no *x){
-    if(x == NULL) {
-        return x;
-    }
+no *balanceamento(arvore* T, no *x){
+    if(x == NULL) return NULL;
     else{
         if(balanco(x) == -2){
             printf("\tA altura do desbalanceado é -2\n");
@@ -324,7 +317,7 @@ void balanceamento(arvore* T, no *x){
                 rotacaoSimplesEsq(T, x);
             }
         }
-        if(balanco(x) == 2){
+        else if(balanco(x) == 2){
             printf("\tA altura do desbalanceado é +2\n");
             no *y = x->esq;
             if(balanco(y) == -1){
@@ -337,47 +330,46 @@ void balanceamento(arvore* T, no *x){
             }
         }
         balanceamento(T, x->pai);
-        mostraArvore(raiz(T), 1);
         return x;
     }
 }
 
 no *insereAVL(arvore *T, no *x, no *novo){
     if(T->raiz == NULL){
-        printf("\tT->raiz == NULL\n");
+        printf("\tArvore Vazia\n");
         T->raiz = novo;
         novo->altura = 1;
         novo->pai = NULL;
         T->tam++;
+        mostraArvore(raiz(T), 2);
     }
     else{
         if(novo->codCliente < x->codCliente){
-            printf("\tnovo->codCliente < x->codCliente\n");
             if(x->esq == NULL){
                 x->esq = novo;
                 novo->pai = x;
                 novo->altura = 1;
                 T->tam++;
+                mostraArvore(raiz(T), 1);
             }
             else{
-                x->esq = insereAVL(T, x->esq, novo);
+                insereAVL(T, x->esq, novo);
             }
         }
         else if(novo->codCliente > x->codCliente){
-            printf("\tnovo->codCliente > x->codCliente\n");
             if(x->dir == NULL){
                 x->dir = novo;
                 novo->altura = 1;
                 novo->pai = x;
                 T->tam++;
+                mostraArvore(raiz(T), 1);
             }
             else{
-                x->dir = insereAVL(T, x->dir, novo);
+                insereAVL(T, x->dir, novo);
             }
         }
         int k = balanco(x);
         if(k == 2 || k == -2) {
-            printf("\tEntrou em balanceio\n");
             balanceamento(T, x);
         }
     }
@@ -421,8 +413,7 @@ void mostraArvore(no* a, int b) {
 }
 
 void imprimeNo(int c, int b) {
-    int i;
-    for (i = 0; i < b; i++) printf("   ");
+    for (int i = 0; i < b; i++) printf("   ");
     printf("%d\n", c);
 }
 
