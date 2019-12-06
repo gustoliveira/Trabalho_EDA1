@@ -224,27 +224,27 @@ int saldo_sub(no* n, int valor){
 no *rotacaoSimplesEsq(arvore *T, no *x){
     no *y = x->dir;
     x->dir = y->esq;
-
     if(T->raiz == x){
         T->raiz = y;
     }
-    else{
+
+    if(x->pai != NULL){
         if(x == x->pai->esq){
             x->pai->esq = y;
         }
-        else{
+        else if(x == x->pai->dir){
             x->pai->dir = y;
         }
     }
-    x->dir->pai = x;
+    if(x->dir != NULL) x->dir->pai = x;
+
+    y->esq = x;
     y->pai = x->pai;
     x->pai = y;
-    y->esq = x;
 
-    x->altura = altura(x);
-    y->altura = altura(y);
+    // x->altura = altura(x);
+    // y->altura = altura(y);
 
-    printf("Rotação Simples Esquerda");
     return y;
 }
 
@@ -255,7 +255,7 @@ no *rotacaoSimplesDir(arvore *T, no *x){
     if(T->raiz == x){
         T->raiz = y;
     }
-    else{
+    if(x->pai != NULL){
         if(x == x->pai->esq){
             x->pai->esq = y;
         }
@@ -263,15 +263,15 @@ no *rotacaoSimplesDir(arvore *T, no *x){
             x->pai->dir = y;
         }
     }
-    x->esq->pai = x;
-    y->pai = x->pai;
+
+    if(x->esq != NULL) x->esq->pai = x;
     x->pai = y;
     y->dir = x;
+    y->pai = x->pai;
 
     x->altura = altura(x);
     y->altura = altura(y);
 
-    printf("Rotação Simples Direita");
     return y;
 }
 
@@ -279,7 +279,6 @@ no *rotacaoDuplaEsq(arvore *T, no *x){
     no *y = x->dir;
     y = rotacaoSimplesDir(T, y);
     x = rotacaoSimplesEsq(T, x);
-    printf("Rotação Dupla Esquerda");
     return x;
 }
 
@@ -287,7 +286,6 @@ no *rotacaoDuplaDir(arvore *T, no *x){
     no *y = x->dir;
     x = rotacaoSimplesEsq(T, x);
     y = rotacaoSimplesDir(T, y);
-    printf("Rotação Dupla Direita");
     return x;
 }
 
@@ -301,66 +299,89 @@ int altura_no(no* n){
 }
 
 int balanco(no *n){
-    return(altura_no(n->esq)-altura_no(n->dir));
+    if(n == NULL) return 0;
+    return altura_no(n->esq)-altura_no(n->dir);
 }
 
-no *balanceamento(arvore* T, no *x){
-    if(balanco(x) == -2){
-        no *y = x->dir;
-        if(balanco(y) == 1){
-            rotacaoDuplaEsq(T, x);
-        }
-        else{
-            rotacaoSimplesEsq(T, x);
-        }
+no *noEsq(no *n){
+    return n->esq;
+}
+
+void balanceamento(arvore* T, no *x){
+    if(x == NULL) {
+        return x;
     }
-    if(balanco(x) == 2){
-        no *y = x->esq;
-        if(balanco(y) == -1){
-            rotacaoDuplaDir(T, x);
+    else{
+        if(balanco(x) == -2){
+            printf("\tA altura do desbalanceado é -2\n");
+            no *y = x->dir;
+            if(balanco(y) == 1){
+                printf("\t\tRotDupEsq\n");
+                rotacaoDuplaEsq(T, x);
+            }
+            else{
+                printf("\t\tRotSimEsq\n");
+                rotacaoSimplesEsq(T, x);
+            }
         }
-        else{
-            rotacaoSimplesDir(T, x);
+        if(balanco(x) == 2){
+            printf("\tA altura do desbalanceado é +2\n");
+            no *y = x->esq;
+            if(balanco(y) == -1){
+                printf("\t\tRotDupDir\n");
+                rotacaoDuplaDir(T, x);
+            }
+            else{
+                printf("\t\tRotSimDir\n");
+                rotacaoSimplesDir(T, x);
+            }
         }
+        balanceamento(T, x->pai);
+        mostraArvore(raiz(T), 1);
+        return x;
     }
-    return x;
 }
 
 no *insereAVL(arvore *T, no *x, no *novo){
     if(T->raiz == NULL){
+        printf("\tT->raiz == NULL\n");
         T->raiz = novo;
         novo->altura = 1;
         novo->pai = NULL;
-        return novo;
+        T->tam++;
     }
-    // printf("Debug\n");
-    if(novo->codCliente < x->codCliente){
-        if(x->esq == NULL){
-            x->esq = novo;
-            novo->altura = 1;
-            novo->pai = x;
+    else{
+        if(novo->codCliente < x->codCliente){
+            printf("\tnovo->codCliente < x->codCliente\n");
+            if(x->esq == NULL){
+                x->esq = novo;
+                novo->pai = x;
+                novo->altura = 1;
+                T->tam++;
+            }
+            else{
+                x->esq = insereAVL(T, x->esq, novo);
+            }
         }
-        else{
-            x->esq = insereAVL(T, x->esq, novo);
+        else if(novo->codCliente > x->codCliente){
+            printf("\tnovo->codCliente > x->codCliente\n");
+            if(x->dir == NULL){
+                x->dir = novo;
+                novo->altura = 1;
+                novo->pai = x;
+                T->tam++;
+            }
+            else{
+                x->dir = insereAVL(T, x->dir, novo);
+            }
+        }
+        int k = balanco(x);
+        if(k == 2 || k == -2) {
+            printf("\tEntrou em balanceio\n");
+            balanceamento(T, x);
         }
     }
-    if(novo->codCliente > x->codCliente){
-        if(x->dir == NULL){
-            x->dir = novo;
-            novo->altura = 1;
-            novo->pai = x;
-        }
-        else{
-            x->dir = insereAVL(T, x->dir, novo);
-        }
-    }
-    int k = balanco(x);
-    if(k < 0) k = k * (-1);
-
-    if(k == 2){
-        balanceamento(T, x);
-    }
-    return novo;
+    return x;
 }
 
 // no *removeAVL(arvore *T, no *x, int k){
@@ -389,3 +410,23 @@ no *insereAVL(arvore *T, no *x, no *novo){
 //     }
 // }
 
+void mostraArvore(no* a, int b) {
+    if (a == NULL) {
+        imprimeNo(0, b);
+        return;
+    };
+    mostraArvore(a->dir, b+1);
+    imprimeNo(a->codCliente, b);
+    mostraArvore(a->esq, b+1);
+}
+
+void imprimeNo(int c, int b) {
+    int i;
+    for (i = 0; i < b; i++) printf("   ");
+    printf("%d\n", c);
+}
+
+int codCliente(no *n){
+    if(n == NULL) return 0;
+    return n->codCliente;
+}

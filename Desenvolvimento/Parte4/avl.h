@@ -91,11 +91,16 @@ no *rotacaoSimplesEsq(arvore *T, no *x);
 no *rotacaoSimplesDir(arvore *T, no *x);
 no *rotacaoDuplaEsq(arvore *T, no *x);
 no *rotacaoDuplaDir(arvore *T, no *x);
-no *balanceamento(arvore* T, no *x);
+void balanceamento(arvore* T, no *x);
 void imprime_AVL_crescente(no *x);
 void imprime_AVL_decrescente(no *x);
 int max(int a, int b);
 int balanco(no *n);
 no *insereAVL(arvore *T, no *x, no *novo);
+int codCliente(no *n);
+void mostraArvore(no* a, int b);
+void imprimeNo(int c, int b);
+no *noEsq(no *n);
+
 
 #endif

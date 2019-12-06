@@ -3,30 +3,47 @@
 #include <stdlib.h>
 #include "avl.h"
 
+
 int main(){
-    printf("Debug");
     arvore *arv = create_tree();
-    int vetor[8] = {5, 4, 7, 20, 14, 19, 21, 16};
-    no *a0 = create_no(vetor[0], 500);
-    no *a1 = create_no(vetor[1], 500);
-    no *a2 = create_no(vetor[2], 500);
-    no *a3 = create_no(vetor[3], 600);
-    no *a4 = create_no(vetor[4], 30);
-    no *a5 = create_no(vetor[5], 9);
-    no *a6 = create_no(vetor[6], 30);
-    no *a7 = create_no(vetor[7], 1);
+    int vetor[8] = {5, 4, 7, 20, 21, 19, 18, 16};
+    // int vetor[8] = {1, 2, 3, 20, 21, 19, 21, 16};
+    no *a0 = create_no(vetor[0], 5);
+    no *a1 = create_no(vetor[1], 4);
+    no *a2 = create_no(vetor[2], 7);
+    no *a3 = create_no(vetor[3], 20);
+    no *a4 = create_no(vetor[4], 21);
+    no *a5 = create_no(vetor[5], 19);
+    no *a6 = create_no(vetor[6], 21);
+    no *a7 = create_no(vetor[7], 16);
 
+    printf("Inserindo nó: %d\n", codCliente(a0));
     insereAVL(arv, raiz(arv), a0);
+    printf("Inserindo nó: %d\n", codCliente(a1));
     insereAVL(arv, raiz(arv), a1);
+    printf("Inserindo nó: %d\n", codCliente(a2));
     insereAVL(arv, raiz(arv), a2);
+    printf("Inserindo nó: %d\n", codCliente(a3));
     insereAVL(arv, raiz(arv), a3);
+    printf("Inserindo nó: %d\n", codCliente(a4));
     insereAVL(arv, raiz(arv), a4);
+    printf("Inserindo nó: %d\n", codCliente(a5));
     insereAVL(arv, raiz(arv), a5);
+    printf("Inserindo nó: %d\n", codCliente(a6));
     insereAVL(arv, raiz(arv), a6);
-    insereAVL(arv, raiz(arv), a7);
+    // printf("Inserindo nó: %d\n", codCliente(a7));
+    // insereAVL(arv, raiz(arv), a7);
 
-    printf("\nInOrdem: ");
-    InOrdem(raiz(arv));
+
+    printf("\nTamanho da arvore: %d\n", size(arv));
+
+    printf("Arvore Desenhada: \n");
+
+    mostraArvore(raiz(arv), 1);
+
+    printf("\nInOrdem: "); InOrdem(raiz(arv));
+
+    printf("\n\n%d\n\n", codCliente(noEsq(a2)));
     return 0;
 }
 
