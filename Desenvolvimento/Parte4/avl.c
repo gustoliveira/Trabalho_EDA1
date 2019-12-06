@@ -1,27 +1,21 @@
 //Gustavo de Oliveira Ferreira
 #include <stdio.h>
 #include <stdlib.h>
-#include "pilha.h"
 #include "avl.h"
 
 typedef struct no no;
 typedef struct arvore arvore;
 
-//Struct tipo no
 struct no{
-    unsigned long int codCliente, qntOp;
-    long long int saldo;
+    int codCliente, qntOp, altura, saldo;
     no *esq, *dir, *pai;
 };
 
-//Struct tipo arvore
 struct arvore{
     no *raiz;
-    unsigned long int altura; //Altura da arvore
-    unsigned long int tam; //Quantos elementos a arvore contem
+    int tam;
 };
 
-//Função para alocar espaço do arvore
 arvore *create_tree(){
     arvore *arv = (arvore*)malloc(sizeof(arvore));
     arv->raiz = NULL;
@@ -29,44 +23,55 @@ arvore *create_tree(){
     return arv;
 }
 
-//Função para alocar espaço do no
-no *create_no(unsigned long int codCliente, long long int saldo){
-    no *n = (no*)malloc(sizeof(no));
-    n->codCliente = codCliente;
-    n->saldo = saldo;
-    n->qntOp = 1;
-    n->esq = NULL;
-    n->dir = NULL;
-    n->pai = NULL;
-    return n;
+//Retorna um ponteiro para a raiz da arvore
+no *raiz(arvore *arv){
+    return arv->raiz;
 }
 
-// Função para verificar se arvore está vazia
+//Função para alocar espaço do no
+no *create_no(int codCliente, int saldo){
+    no *n = (no*)malloc(sizeof(no));
+    if(n == NULL){
+        return NULL;
+    }
+    else{
+        n->codCliente = codCliente;
+        n->saldo = saldo;
+        n->qntOp = 1;
+        n->altura = 0;
+        n->esq = NULL;
+        n->dir = NULL;
+        n->pai = NULL;
+        return n;
+    }
+}
+
 int isEmpty(arvore *arv){
-    if (arv->raiz == NULL) {       //Se estiver vazia retorna 1
+    if (arv->raiz == NULL) {
         return 1;
+    }
+    else if(arv->raiz != NULL){
+        return 0;
     }
     return 0;
 }
 
-//Função para realizar busca na Arvore -> BigO(qntElementos)
-//Entra com (raiz(arv), no *n)
 no *search_no(no *x, no *n){
     if(x == NULL){
         return x;
     }
     if(x->codCliente < n->codCliente) {
-        return search(x->dir, n);
+        return search_no(x->dir, n);
     }
     else if(x->codCliente > n->codCliente) {
-        return search(x->esq, n);
+        return search_no(x->esq, n);
     }
     else{
         return x;
     }
 }
 
-no *search_cod(no *x, unsigned long int codCliente){
+no *search_cod(no *x, int codCliente){
     if(x == NULL){
         return x;
     }
@@ -80,43 +85,8 @@ no *search_cod(no *x, unsigned long int codCliente){
         return x;
     }
 }
-
-//Função iterativa para inserir na ABB
-//Se foi inserido corretamente, retorna 1, se já houver o elemento,
-//retorna 0 e não insere
-int insert_iterativa(arvore *arv, no *x){
-    if(arv->raiz == NULL){
-        arv->raiz = x;
-        arv->tam++;
-        return 1;
-    }
-    else{
-        no *auxPai = arv->raiz, *aux = NULL;
-        while (auxPai != NULL){
-            if(auxPai->codCliente > x->codCliente){
-                aux = auxPai->esq;
-                if(aux == NULL){
-                    auxPai->esq = x;
-                    arv->tam++;
-                    return 1;
-                }
-            }
-            else if(auxPai->codCliente < x->codCliente){
-                aux = auxPai->dir;
-                if(aux == NULL){
-                    auxPai->dir = x;
-                    arv->tam++;
-                    return 1;
-                }
-            }
-            auxPai = aux;
-        }
-    }
-    return 0;
-}
-
 //Tamanho da arvore
-unsigned long int size(arvore *arv){
+int size(arvore *arv){
     return arv->tam;
 }
 
@@ -143,58 +113,6 @@ void transplante(arvore *T, no *u, no *v){
     else u->pai->dir = v;
 
     if(v != NULL) v->pai = u->pai;
-}
-
-no *remover_abb(arvore *t, no *z){
-    if(z->esq == NULL) transplante(t, z, z->dir);
-    else if(z->dir == NULL)   transplante(t, z, z->esq);
-    else{
-        no *y = minimo(z->dir);
-        if(y->pai != z){
-            transplante(t, y, y->dir);
-            y->dir = z->dir;
-            y->dir->pai = y;
-        }
-        transplante(t, z, y);
-        y->esq = z->esq;
-        y->esq->pai = y;
-    }
-    t->tam--;
-    return z;
-}
-
-//raiz - esq - dir
-void PreOrdem(no *x){
-    if(x!=NULL){
-        printf("%lu %lu %lld", x->codCliente, x->qntOp, x->saldo);
-        PreOrdem(x->esq);
-        PreOrdem(x->dir);
-    }
-}
-
-//Pode ser utilizada para destruir a arvore
-//esq - dir - raiz
-void PosOrdem(no *x){
-    if(x!=NULL){
-        PosOrdem(x->esq);
-        PosOrdem(x->dir);
-        printf("%lu %lu %lld", x->codCliente, x->qntOp, x->saldo);
-    }
-}
-
-//Utiliza a idea de varrer atraves de PosOrdem
-void destroyTree(arvore *arv, no *x){
-    if(x != NULL){
-        destroyTree(arv, x->esq);
-        destroyTree(arv, x->dir);
-        free(x);
-    }
-    arv->raiz = NULL;
-}
-
-//Retorna um ponteiro para a raiz da arvore
-no *raiz(arvore *arv){
-    return arv->raiz;;
 }
 
 no *minimo(no *x){
@@ -232,6 +150,56 @@ no *predecessor(no *x){
     return y;
 }
 
+void PreOrdem(no *x){
+    if(x!=NULL){
+        printf("%d ", x->codCliente);
+        PreOrdem(x->esq);
+        PreOrdem(x->dir);
+    }
+}
+
+void InOrdem(no *x){
+    if(x!=NULL){
+        InOrdem(x->esq);
+        printf("%d ", x->codCliente);
+        InOrdem(x->dir);
+    }
+}
+void PosOrdem(no *x){
+    if(x!=NULL){
+        PosOrdem(x->esq);
+        PosOrdem(x->dir);
+        printf("%d ", x->codCliente);
+    }
+}
+
+void imprime_AVL_crescente(no *x){
+    if(x!=NULL){
+        PosOrdem(x->esq);
+        printf("%d %d %d", x->codCliente, x->qntOp, x->saldo);
+        PosOrdem(x->dir);
+    }
+}
+
+void imprime_AVL_decrescente(no *x){
+    if(x!=NULL){
+        PosOrdem(x->dir);
+        printf("%d %d %d", x->codCliente, x->qntOp, x->saldo);
+        PosOrdem(x->esq);
+    }
+}
+
+arvore *destroyTree(arvore *arv, no *x){
+    if(x != NULL){
+        destroyTree(arv, x->esq);
+        destroyTree(arv, x->dir);
+        free(x);
+    }
+    free(arv);
+    arv->raiz = NULL;
+    return arv;
+}
+
 int altura(no *n){
     int hDir, hEsq;
 
@@ -243,99 +211,181 @@ int altura(no *n){
     else return hEsq+1;
 }
 
-long int saldo_add(no* n, long int valor){
+int saldo_add(no* n, int valor){
 	n->saldo += valor;
     return n->saldo;
 }
 
-long int saldo_sub(no* n, long int valor){
+int saldo_sub(no* n, int valor){
 	n->saldo -= valor;
     return n->saldo;
 }
 
-no *rotacaoEsq(arvore *T, no *x){
+no *rotacaoSimplesEsq(arvore *T, no *x){
+    no *y = x->dir;
+    x->dir = y->esq;
 
+    if(T->raiz == x){
+        T->raiz = y;
+    }
+    else{
+        if(x == x->pai->esq){
+            x->pai->esq = y;
+        }
+        else{
+            x->pai->dir = y;
+        }
+    }
+    x->dir->pai = x;
+    y->pai = x->pai;
+    x->pai = y;
+    y->esq = x;
+
+    x->altura = altura(x);
+    y->altura = altura(y);
+
+    printf("Rotação Simples Esquerda");
+    return y;
+}
+
+no *rotacaoSimplesDir(arvore *T, no *x){
+    no *y = x->esq;
+    x->esq = y->dir;
+
+    if(T->raiz == x){
+        T->raiz = y;
+    }
+    else{
+        if(x == x->pai->esq){
+            x->pai->esq = y;
+        }
+        else{
+            x->pai->dir = y;
+        }
+    }
+    x->esq->pai = x;
+    y->pai = x->pai;
+    x->pai = y;
+    y->dir = x;
+
+    x->altura = altura(x);
+    y->altura = altura(y);
+
+    printf("Rotação Simples Direita");
+    return y;
 }
 
 no *rotacaoDuplaEsq(arvore *T, no *x){
     no *y = x->dir;
-    y = rotacaoDir(T, y);
-    x = rotacaoEsq(T, x);
+    y = rotacaoSimplesDir(T, y);
+    x = rotacaoSimplesEsq(T, x);
+    printf("Rotação Dupla Esquerda");
     return x;
 }
 
-// no *insereAVL(arvore *T, )
+no *rotacaoDuplaDir(arvore *T, no *x){
+    no *y = x->dir;
+    x = rotacaoSimplesEsq(T, x);
+    y = rotacaoSimplesDir(T, y);
+    printf("Rotação Dupla Direita");
+    return x;
+}
 
-// void imprimeArvorePorNivel(no *raiz){
-//     if (raiz == NULL) {  // Caso o nó dado esteja vazio
-//         cout << "A arvore está vazia" << endl;
+int max(int a, int b){
+	return (a > b) ? a : b;
+}
+
+int altura_no(no* n){
+    if (n == NULL) return 0;
+    else return (max(altura_no(n->esq), altura_no(n->dir))+1);
+}
+
+int balanco(no *n){
+    return(altura_no(n->esq)-altura_no(n->dir));
+}
+
+no *balanceamento(arvore* T, no *x){
+    if(balanco(x) == -2){
+        no *y = x->dir;
+        if(balanco(y) == 1){
+            rotacaoDuplaEsq(T, x);
+        }
+        else{
+            rotacaoSimplesEsq(T, x);
+        }
+    }
+    if(balanco(x) == 2){
+        no *y = x->esq;
+        if(balanco(y) == -1){
+            rotacaoDuplaDir(T, x);
+        }
+        else{
+            rotacaoSimplesDir(T, x);
+        }
+    }
+    return x;
+}
+
+no *insereAVL(arvore *T, no *x, no *novo){
+    if(T->raiz == NULL){
+        T->raiz = novo;
+        novo->altura = 1;
+        novo->pai = NULL;
+        return novo;
+    }
+    // printf("Debug\n");
+    if(novo->codCliente < x->codCliente){
+        if(x->esq == NULL){
+            x->esq = novo;
+            novo->altura = 1;
+            novo->pai = x;
+        }
+        else{
+            x->esq = insereAVL(T, x->esq, novo);
+        }
+    }
+    if(novo->codCliente > x->codCliente){
+        if(x->dir == NULL){
+            x->dir = novo;
+            novo->altura = 1;
+            novo->pai = x;
+        }
+        else{
+            x->dir = insereAVL(T, x->dir, novo);
+        }
+    }
+    int k = balanco(x);
+    if(k < 0) k = k * (-1);
+
+    if(k == 2){
+        balanceamento(T, x);
+    }
+    return novo;
+}
+
+// no *removeAVL(arvore *T, no *x, int k){
+//     if(x == NULL){
+//         return NULL;
+//     }
+
+//     if(k < x->codCliente){
+//         x->esq = removeAVL(T, x->esq, k);
 //     }
 //     else{
-//         queue<no*> fila; // Create an empty queue for level order tarversal
-
-//         fila.push(raiz); // Enqueue Root and initialize height
-
-//         while (fila.empty() == false){
-//             // nodeCount (queue size) indicates number
-//             // of nodes at current lelvel.
-//             // Dequeue all nodes of current level and
-//             // Enqueue all nodes of next level
-//             for(int i = fila.size(); i > 0; i--){
-//                 // no *aux = fila.front();
-//                 cout << fila.front()->num << " ";
-//                 if (fila.front()->esq != NULL)
-//                     fila.push(fila.front()->esq);
-//                 if (fila.front()->dir != NULL)
-//                     fila.push(fila.front()->dir);
-//                 fila.pop();
+//         if(k > x->codCliente){
+//             x->dir = removeAVL(T, x->dir, k);
+//         }
+//         else{
+//             if(x->esq == NULL){
+//                 transplante(T, x, x->dir);
 //             }
-//             cout << endl;
+//             else if(x->dir == NULL){
+//                 transplante(T, x, x->esq);
+//             }
+//             else{
+//                 y = AVL_Mi
+//             }
 //         }
 //     }
 // }
 
-int imprime_AVL_crescente(no *x){
-    if(x == NULL){
-        printf("A AVL está vazia");
-        return 0;
-    }
-    pilha *stack = create_p();
-    while(x != NULL || isEmpty_p(stack)){
-        while(x != NULL){
-            push(stack, x);
-            x = x->esq;
-        }
-        x = pop_p(stack);
-        printf("%lu %lu %lld", x->codCliente, x->qntOp, x->saldo);
-        x = x->dir;
-    }
-    printf("\n");
-    destroy_p(stack);
-    return 1;
-}
-
-int imprime_AVL_crescente(no *x){
-    if(x == NULL){
-        printf("A AVL está vazia");
-        return 0;
-    }
-    pilha *stack = create_p();
-    pilha *p_aux = create_p();
-    while(x != NULL || isEmpty_p(p_aux)){
-        while(x != NULL){
-            push(p_aux, x);
-            x = x->esq;
-        }
-        x = pop_p(p_aux);
-        push_p(stack, x);
-        x = x->dir;
-    }
-    while(isEmpty_p(stack) == 0){
-        x = pop_p(stack);
-        printf("%lu %lu %lld", x->codCliente, x->qntOp, x->saldo);
-    }
-    printf("\n");
-    destroy_p(p_aux);
-    destroy_p(stack);
-    return 1;
-}

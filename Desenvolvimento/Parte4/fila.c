@@ -1,151 +1,89 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include "no.h"
-#include "fila.h"
-
-//Quando for compilar, para usar biblioteca "math" tem que usar "-lm", talkei?
-
-typedef struct no no;
 typedef struct fila fila;
+typedef struct no no;
 
 struct no{
-    unsigned long int cpf,cpft;
-    long int valor;
-    char op;
-    no* prox;
+    unsigned long int codCliente, qntOp;
+    long long int saldo;
+    no *esq, *dir, *pai;
 };
 
 struct fila{
-	unsigned long int inicio,fim,qtd,tam;
-	no** vetor;
+	no* inicio, *fim;
+	unsigned long int tam;
 };
 
-unsigned long int inicio_f(fila *f){
-	return f->inicio;
-}
-
-unsigned long int fim_f(fila *f){
-	return f->fim;
-}
-
-unsigned long int qtd_f(fila *f){
-	return f->qtd;
-}
-
-unsigned long int tam_f(fila *f){
-	return f->tam;
-}
-
-no** vetor_f(fila *f){
-	return f->vetor;
-}
-
-unsigned long int cpf_f(no *n){
-	return n->cpf;
-}
-
-unsigned long int cpft_f(no *n){
-	return n->cpft;
-}
-
-long int valor_f(no *n){
-	return n->valor;
-}
-
-char op_f(no *n){
-  return n->op;
-}
-
-no *prox_f(no *n){
-  return n->prox;
-}
-
-fila* create_f(unsigned long int tam0){
-	unsigned long int tamanho = floor(sqrt(tam0));
-
-	fila* f = (fila*) malloc(sizeof(fila));
- 	if(f!=NULL){
- 		f->inicio = 0;
- 		f->fim = tamanho-1;
- 		f->qtd = 0;
- 		f->tam = tamanho;
- 		f->vetor = (no**) malloc(sizeof(no*)*f->tam);
- 		if(f->vetor == NULL) return NULL;
- 		else return f;
- 	}
- 	else return NULL;
-}
-
-//Função que retorna 1 se a fila está cheia ou 0 senão
-int full_f(fila *f){
-	if(f->qtd == f->tam) return 1;
-	else return 0;
-}
-
-//Função para checar se a fila está vazia
-int isEmpty_f(fila *f){
-	if(f->qtd == 0) return 1;
-	else return 0;
-}
-
-//Função para enfileirar elemento
-void push_f(fila *f,no* x){
-	if(full_f(f)==1) printf("FILA CHEIA!");
-	else{
-		  f->fim = (f->fim+1)%f->tam;
-		  f->vetor[f->fim] = x;
-		  f->qtd++;
+void destroi(fila *f){
+	while(vazia(f) != 1){
+		no *aux = desenfileira(f);
+		free(aux);
 	}
 }
 
-//Função para desenfileirar primeiro elemento da fila (NULL se vazia)
-no* pop_f(fila *f){
- 	if(isEmpty_f(f)==1){
-    return NULL;
-  }
- 	else{
- 		unsigned long int x = f->inicio;
- 		f->inicio = (f->inicio+1)%f->tam;
- 		f->qtd--;
- 		return f->vetor[x];
- 	}
+fila* cria_fila(){
+    fila *f = (fila*) malloc(sizeof(fila));
+    f->inicio = NULL;
+    f->fim = NULL;
+    return f;
 }
 
-//Retorna primeiro elemento da fila (NULL - Caso fila vazia)
-no* front_f(fila*f){
-	if(isEmpty_f(f)==1) return NULL;
-	else return f->vetor[f->inicio];
+int vazia(fila *f){
+    if (f->inicio == NULL) return 1;
+    else return 0;
 }
 
-//Retorna tamanho da fila
-unsigned long int size_f(fila* f){
-  return f->tam;
-}
-
-//Procura pela primeira ocorrência de um CPF na fila, e retorna-a (NULL Caso não encontrado ou Fila Vazia)
-no* search_f (fila* f,unsigned long int cpf){
-  no* resultado = NULL;
-  if(isEmpty_f(f)==0){
-    int flag=0;
-    for(unsigned long int i =0; i<f->tam;i++){
-      no* aux = front_f(f);
-      if(aux->cpf == cpf && flag == 0){
-          resultado = aux;
-      }
-      pop_f(f);
-      push_f(f,aux);
+void enfileira(fila *f,no* x){
+    if(vazia(f)==1){
+        f->inicio = x;
+        f->fim = x;
     }
-  }
-  return resultado;
+    else{
+        f->fim->esq = x;
+        f->fim = x;
+    }
+    x->esq = NULL;
+	f->tam++;
 }
 
-//Função para destuir a fila e todos os nós referentes
-void destroy_f(fila* f){
-  while(isEmpty_f(f)==0){
-    no* cliente  = pop_f(f);
-    free(cliente);
-  }
-  free(f->vetor);
-  free(f);
+no* desenfileira(fila *f){
+    if(vazia(f)==1) return NULL; //Fila vazia
+    else{
+        no* x = f->inicio;
+        f->inicio = x->esq;
+        if(f->inicio == NULL){
+            f->fim=NULL;
+        }
+        x->esq = NULL;
+		f->tam--;
+        return x;
+    }
+}
+
+no *frente(fila*f){
+    if(vazia(f)==1 || f->inicio == NULL) return 0;
+    else return f->inicio;
+}
+
+int imprimeArvorePorNivel(no *raiz){
+    if (raiz == NULL) {  // Caso o nó dado esteja vazio
+        printf("A arvore está vazia");
+		return 0;
+    }
+	fila *f = cria_fila();
+	enfileira(f, raiz);
+
+	while (vazia(f) != 1){
+		for(int i = f->tam; i > 0; i--){
+			no *aux = frente(f);
+			printf("%lu %lu %ld", aux->codCliente, aux->qntOp, aux->saldo);
+			if (aux->esq != NULL)
+				enfileira(f, aux->esq);
+			if (aux->dir != NULL)
+				enfilera(f, aux->dir);
+			desenfileira(f);
+		}
+		printf("\n");
+	}
+	return 1;
 }

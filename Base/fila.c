@@ -19,7 +19,7 @@ no* criar_no(int k){
 	else{
 		n->chave = k;
 		n->prox = NULL;
-		return n;	
+		return n;
 	}
 }
 
@@ -92,24 +92,4 @@ int main(){
         }
     }
 
-}	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
