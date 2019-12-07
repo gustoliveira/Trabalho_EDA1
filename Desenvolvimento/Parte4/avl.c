@@ -175,17 +175,17 @@ void PosOrdem(no *x){
 
 void imprime_AVL_crescente(no *x){
     if(x!=NULL){
-        PosOrdem(x->esq);
-        printf("%d %d %d", x->codCliente, x->qntOp, x->saldo);
-        PosOrdem(x->dir);
+        imprime_AVL_crescente(x->esq);
+        printf("codCliente: %d qntOp: %d Saldo: %d\n", x->codCliente, x->qntOp, x->saldo);
+        imprime_AVL_crescente(x->dir);
     }
 }
 
 void imprime_AVL_decrescente(no *x){
     if(x!=NULL){
-        PosOrdem(x->dir);
-        printf("%d %d %d", x->codCliente, x->qntOp, x->saldo);
-        PosOrdem(x->esq);
+        imprime_AVL_decrescente(x->dir);
+        printf("codCliente: %d qntOp: %d Saldo: %d\n", x->codCliente, x->qntOp, x->saldo);
+        imprime_AVL_decrescente(x->esq);
     }
 }
 
@@ -241,7 +241,7 @@ no *rotacaoSimplesEsq(arvore *T, no *x){
     x->altura = altura(x);
     y->altura = altura(y);
 
-    return x;
+    return y;
 }
 
 no *rotacaoSimplesDir(arvore *T, no *x){
@@ -264,7 +264,7 @@ no *rotacaoSimplesDir(arvore *T, no *x){
     x->altura = altura(x);
     y->altura = altura(y);
 
-    return x;
+    return y;
 }
 
 no *rotacaoDuplaEsq(arvore *T, no *x){
@@ -306,26 +306,20 @@ no *balanceamento(arvore* T, no *x){
     if(x == NULL) return NULL;
     else{
         if(balanco(x) == -2){
-            printf("\tA altura do desbalanceado é -2\n");
             no *y = x->dir;
             if(balanco(y) == 1){
-                printf("\t\tRotDupEsq\n");
                 rotacaoDuplaEsq(T, x);
             }
             else{
-                printf("\t\tRotSimEsq\n");
                 rotacaoSimplesEsq(T, x);
             }
         }
         else if(balanco(x) == 2){
-            printf("\tA altura do desbalanceado é +2\n");
             no *y = x->esq;
             if(balanco(y) == -1){
-                printf("\t\tRotDupDir\n");
                 rotacaoDuplaDir(T, x);
             }
             else{
-                printf("\t\tRotSimDir\n");
                 rotacaoSimplesDir(T, x);
             }
         }
@@ -336,12 +330,10 @@ no *balanceamento(arvore* T, no *x){
 
 no *insereAVL(arvore *T, no *x, no *novo){
     if(T->raiz == NULL){
-        printf("\tArvore Vazia\n");
         T->raiz = novo;
         novo->altura = 1;
         novo->pai = NULL;
         T->tam++;
-        mostraArvore(raiz(T), 2);
     }
     else{
         if(novo->codCliente < x->codCliente){
@@ -350,7 +342,6 @@ no *insereAVL(arvore *T, no *x, no *novo){
                 novo->pai = x;
                 novo->altura = 1;
                 T->tam++;
-                mostraArvore(raiz(T), 1);
             }
             else{
                 insereAVL(T, x->esq, novo);
@@ -362,7 +353,6 @@ no *insereAVL(arvore *T, no *x, no *novo){
                 novo->altura = 1;
                 novo->pai = x;
                 T->tam++;
-                mostraArvore(raiz(T), 1);
             }
             else{
                 insereAVL(T, x->dir, novo);
@@ -376,31 +366,30 @@ no *insereAVL(arvore *T, no *x, no *novo){
     return x;
 }
 
-// no *removeAVL(arvore *T, no *x, int k){
-//     if(x == NULL){
-//         return NULL;
-//     }
+no *removeAVL(arvore *T, no *x, int codCliente){
+    if(x == NULL){
+        return NULL;
+    }
 
-//     if(k < x->codCliente){
-//         x->esq = removeAVL(T, x->esq, k);
-//     }
-//     else{
-//         if(k > x->codCliente){
-//             x->dir = removeAVL(T, x->dir, k);
-//         }
-//         else{
-//             if(x->esq == NULL){
-//                 transplante(T, x, x->dir);
-//             }
-//             else if(x->dir == NULL){
-//                 transplante(T, x, x->esq);
-//             }
-//             else{
-//                 y = AVL_Mi
-//             }
-//         }
-//     }
-// }
+    if(codCliente < x->codCliente){
+        x->esq = removeAVL(T, x->esq, codCliente);
+    }
+    if(codCliente > x->codCliente){
+        x->dir = removeAVL(T, x->dir, codCliente);
+    }e
+    else{
+        T->tam--;
+        if(x->esq == NULL){
+            transplante(T, x, x->dir);
+        }
+        else if(x->dir == NULL){
+            transplante(T, x, x->esq);
+        }
+        else{
+            no *y = minimo(x->dir);
+        }
+    }
+}
 
 void mostraArvore(no* a, int b) {
     if (a == NULL) {
@@ -412,6 +401,7 @@ void mostraArvore(no* a, int b) {
     mostraArvore(a->esq, b+1);
 }
 
+//TIRAR ANTES DE ENVIAR
 void imprimeNo(int c, int b) {
     for (int i = 0; i < b; i++) printf("   ");
     printf("%d\n", c);

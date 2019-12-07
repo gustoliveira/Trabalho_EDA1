@@ -97,6 +97,7 @@ void imprime_AVL_decrescente(no *x);
 int max(int a, int b);
 int balanco(no *n);
 no *insereAVL(arvore *T, no *x, no *novo);
+no *removeAVL(arvore *T, no *x, int codCliente);
 int codCliente(no *n);
 void mostraArvore(no* a, int b);
 void imprimeNo(int c, int b);

@@ -41,17 +41,11 @@ int main(){
     printf("Inserindo nó: %d\n", codCliente(a7));
     insereAVL(arv, raiz(arv), a7);
 
-
     printf("\nTamanho da arvore: %d\n", size(arv));
+    printf("InOrdem: "); InOrdem(raiz(arv)); printf("\n\n");
 
-    printf("Arvore Desenhada: \n");
+    
 
-    mostraArvore(raiz(arv), 1);
-
-    printf("\nInOrdem: "); InOrdem(raiz(arv));
-
-    printf("\n\n%d\n\n", codCliente(noPai(a2)));
-    printf("\n\n%d\n\n", codCliente(noDir(a0)));
     return 0;
 }
 
