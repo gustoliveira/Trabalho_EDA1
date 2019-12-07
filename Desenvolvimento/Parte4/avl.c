@@ -107,13 +107,6 @@ no *insert(arvore *arv, no *z){
     return z;
 }
 
-void transplante(arvore *T, no *u, no *v){
-    if(u->pai == raiz(T)) T->raiz = v;
-    else if(u == u->pai->esq) u->pai->esq = v;
-    else u->pai->dir = v;
-
-    if(v != NULL) v->pai = u->pai;
-}
 
 no *minimo(no *x){
     while(x->esq != NULL){
@@ -366,30 +359,99 @@ no *insereAVL(arvore *T, no *x, no *novo){
     return x;
 }
 
-no *removeAVL(arvore *T, no *x, int codCliente){
+no *copia_no(no *y){
+    no* z = create_no(y->codCliente, y->saldo);
+    z->qntOp = y->qntOp;
+    z->esq = y->esq;
+    z->dir = y->dir;
+    z->pai = y->pai;
+
+    return z;
+}
+
+no *transplante(arvore *T, no *u, no *v){
+    if(raiz(T) == u) {
+        T->raiz = v;
+    }
+    else if(u == u->pai->esq) {
+        u->pai->esq = v;
+    }
+    else {
+        printf("DebugTransplante\n");
+        u->pai->dir = v;
+    }
+
+    if(v != NULL) v->pai = u->pai;
+    return u;
+}
+
+no* removeAVL(arvore *T, no* x, int codCliente){
+    if(codCliente == 20) printf("\n\nTESTE: %d %d\n", x->codCliente, codCliente);
     if(x == NULL){
         return NULL;
     }
-
     if(codCliente < x->codCliente){
-        x->esq = removeAVL(T, x->esq, codCliente);
+        x = removeAVL(T, x->esq, codCliente);
     }
-    if(codCliente > x->codCliente){
-        x->dir = removeAVL(T, x->dir, codCliente);
-    }e
-    else{
+    else if(codCliente > x->codCliente){
+        x = removeAVL(T, x->dir, codCliente);
+    }
+    else if(codCliente == x->codCliente){
         T->tam--;
         if(x->esq == NULL){
+            printf("DebugRemover\n");
             transplante(T, x, x->dir);
         }
         else if(x->dir == NULL){
             transplante(T, x, x->esq);
         }
         else{
-            no *y = minimo(x->dir);
+            no* y = sucessor(x);
+            no *z = copia_no(y);
+            // no* z = xe;
+            transplante(T, x, z);
+            z->esq = x->esq;
+            z->dir = x->dir;
+            x->dir->pai = z;
+            x->esq->pai = z;
+            x = z;
+            removeAVL(T, z->dir, y->codCliente);
         }
     }
+    if(x == NULL){
+        return NULL;
+    }
+    x->altura = altura_no(x);
+    if(balanco(x) == 2 || balanco(x) == -2){
+        balanceamento(T, x);
+    }
+    return x;
 }
+
+// no *removeAVL(arvore *T, no *x, int codCliente){
+//     if(x == NULL){
+//         return NULL;
+//     }
+
+//     if(codCliente < x->codCliente){
+//         x->esq = removeAVL(T, x->esq, codCliente);
+//     }
+//     if(codCliente > x->codCliente){
+//         x->dir = removeAVL(T, x->dir, codCliente);
+//     }e
+//     else{
+//         T->tam--;
+//         if(x->esq == NULL){
+//             transplante(T, x, x->dir);
+//         }
+//         else if(x->dir == NULL){
+//             transplante(T, x, x->esq);
+//         }
+//         else{
+//             no *y = minimo(x->dir);
+//         }
+//     }
+// }
 
 void mostraArvore(no* a, int b) {
     if (a == NULL) {

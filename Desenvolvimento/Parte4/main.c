@@ -6,7 +6,7 @@
 
 int main(){
     arvore *arv = create_tree();
-    int vetor[8] = {5, 4, 7, 20, 21, 19, 18, 16};
+    int vetor[8] = {5, 4, 7, 20, 21, 19, 18, 6};
     // int vetor[8] = {1, 2, 3, 20, 21, 19, 21, 16};
     no *a0 = create_no(vetor[0], 5);
     no *a1 = create_no(vetor[1], 4);
@@ -15,7 +15,7 @@ int main(){
     no *a4 = create_no(vetor[4], 21);
     no *a5 = create_no(vetor[5], 19);
     no *a6 = create_no(vetor[6], 21);
-    no *a7 = create_no(vetor[7], 16);
+    no *a7 = create_no(vetor[7], 6);
 
     printf("Inserindo nó: %d\n", codCliente(a0));
     insereAVL(arv, raiz(arv), a0);
@@ -32,11 +32,11 @@ int main(){
     printf("Inserindo nó: %d\n", codCliente(a4));
     insereAVL(arv, raiz(arv), a4);
 
-    printf("Inserindo nó: %d\n", codCliente(a5));
-    insereAVL(arv, raiz(arv), a5);
+    // printf("Inserindo nó: %d\n", codCliente(a5));
+    // insereAVL(arv, raiz(arv), a5);
 
-    printf("Inserindo nó: %d\n", codCliente(a6));
-    insereAVL(arv, raiz(arv), a6);
+    // printf("Inserindo nó: %d\n", codCliente(a6));
+    // insereAVL(arv, raiz(arv), a6);
 
     printf("Inserindo nó: %d\n", codCliente(a7));
     insereAVL(arv, raiz(arv), a7);
@@ -44,8 +44,11 @@ int main(){
     printf("\nTamanho da arvore: %d\n", size(arv));
     printf("InOrdem: "); InOrdem(raiz(arv)); printf("\n\n");
 
-    
-
+    removeAVL(arv, raiz(arv), 7);
+    // removeAVL(arv, raiz(arv), 20);
+    printf("InOrdem: "); InOrdem(raiz(arv)); printf("\n\n");
+    mostraArvore(raiz(arv), 2);
+    // printf("\n\n%d\n", codCliente(noPai(a4)));
     return 0;
 }
 
