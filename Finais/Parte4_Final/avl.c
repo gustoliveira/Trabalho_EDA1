@@ -198,159 +198,101 @@ no *transplante(arv *T, no *u, no *v){
     return u;
 }
 
-// no* removeAVL(arv *T, no* x, int codCliente){
-//     if(x == NULL){
-//         return NULL;
-//     }
-//     if(codCliente < x->codCliente){
-//         x->esq = removeAVL(T, x->esq, codCliente);
-//     }
-//     else if(codCliente > x->codCliente){
-//         x->esq = removeAVL(T, x->dir, codCliente);
-//     }
-//     else if(codCliente == x->codCliente){
-//         T->tam--;
-//         if(x->esq == NULL){
-//             if(x->pai->esq = x) x->pai->esq = transplante(T, x, x->dir);
-//             else x->pai->dir = transplante(T, x, x->dir);
-//         }
-//         else if(x->dir == NULL){
-//             if(x->pai->esq = x) x->pai->esq = transplante(T, x, x->esq);
-//             else x->pai->dir = transplante(T, x, x->esq);
-//         }
-//         else{
-//             no* y = minimo(x->dir);
-//             no *z = copia_no(y);
-//             transplante(T, x, z);
-//             z->esq = x->esq;
-//             z->dir = x->dir;
-//             if(x->dir != NULL) x->dir->pai = z;
-//             if(x->esq != NULL) x->esq->pai = z;
-//             x = z;
-//             x->dir = removeAVL(T, x->dir, y->codCliente);
-
-//         }
-//     }
-//     if(x == NULL){
-//         return NULL;
-//     }
-//     x->altura = altura_no(x);
-//     if(balanco(x) == 2 || balanco(x) == -2){
-//         balanceia(T, x);
-//     }
-//     return x;
-// }
-// no *copia_no(no *y){
-//     no* z = create_no(y->codCliente, y->saldo);
-//     z->altura = y->altura;
-//     z->qntOp = y->qntOp;
-//     return z;
-// }
-
-no* removeAVL (arv* A, no* n, int k){
-    if (n == NULL)
+no* removeAVL (arv* T, no* n, int codCliente){
+    if (n == NULL){
         return NULL;
-    if (n->codCliente < k){
-        return removeAVL(A, n->dir, k);
     }
-    else if (n->codCliente > k){
-        return removeAVL(A, n->esq, k);
+    if (n->codCliente < codCliente){
+        return removeAVL(T, n->dir, codCliente);
     }
-    else if(n->codCliente == k){
-        A->tam--;
-        no* removido = n;
-        //FOLHA
+    else if (n->codCliente > codCliente){
+        return removeAVL(T, n->esq, codCliente);
+    }
+    else if(n->codCliente == codCliente){
+        no *retorno = n;
         if (n->dir == NULL && n->esq == NULL){
-            if (A->raiz == n){
-                A->raiz = NULL;
-            }
-            else if (n->pai->dir == n){
-                n->pai->dir = NULL;
-            }
-            else{
-                n->pai->esq = NULL;
-            }
-            balanceia(A, n->pai);
+            if (T->raiz == n) T->raiz = NULL;
+            else if (n->pai->esq == n) n->pai->esq = NULL;
+            else n->pai->dir = NULL;
+
+            balanceia(T, n->pai);
         }
-        //UM FILHO NA ESQ
-        else if (n->dir == NULL){
-            if (A->raiz == n){
-                A->raiz = n->esq;
-                n->esq->pai = NULL;
-            }
-            else if (n->pai->dir == n){
-                n->pai->dir = n->esq;
-                n->esq->pai = n->pai;
-            }
-            else{
-                n->pai->esq = n->esq;
-                n->esq->pai = n->pai;
-            }
-            balanceia(A, n->esq);
-        }
-        //UM FILHO NA DIR
-        else if (n->esq == NULL){
-            if (A->raiz == n){
-                A->raiz = n->dir;
-                n->dir->pai = NULL;
-            }
-            else if (n->pai->dir == n){
-                n->pai->dir = n->dir;
-                n->dir->pai = n->pai;
-            }
-            else{
-                n->pai->esq = n->dir;
-                n->dir->pai = n->pai;
-            }
-            balanceia(A, n->dir);
-        }
-        //DOIS FILHOS
         else{
-            no* suc = sucessor(n);
-            no* aux = suc->pai;
-            if (n->dir == suc)
-                aux = suc;
-            //DOIS FILHOS E RAIZ
-            if (A->raiz == n){
-                A->raiz = suc;
-                if (n->dir != suc){
-                    if (suc->dir != NULL){
-                        suc->dir->pai = suc->pai;
-                    }
-                    suc->pai->esq = suc->dir;
+            if (n->dir == NULL){
+                if (T->raiz == n){
+                    T->raiz = n->esq;
+                    n->esq->pai = NULL;
                 }
-                suc->pai = NULL;
-            }
-            //DOIS FILHOS E NAO RAIZ
-            else{
-                if (n->pai->dir == n){
-                    n->pai->dir = suc;
-                    if (n->dir != suc){
-                        suc->pai->esq = suc->dir;
-                        if (suc->dir != NULL){
-                            suc->dir->pai = suc->pai;
-                        }
-                    }
-                    suc->pai = n->pai;
+                else if (n->pai->esq == n){
+                    n->pai->esq = n->esq;
+                    n->esq->pai = n->pai;
                 }
                 else{
-                    n->pai->esq = suc;
-                    if (n->dir != suc){
-                        suc->pai->esq = suc->dir;
-                        if (suc->dir) suc->dir->pai = suc->pai;
-                    }
-                    suc->pai = n->pai;
+                    n->pai->dir = n->esq;
+                    n->esq->pai = n->pai;
                 }
+                balanceia(T, n->esq);
             }
-            suc->esq = n->esq;
-            if (suc->esq) suc->esq->pai = suc;
-            if (n->dir != suc){
-                suc->dir = n->dir;
-                if (suc->dir) suc->dir->pai = suc;
+            else if (n->esq == NULL){
+                if (T->raiz == n){
+                    T->raiz = n->dir;
+                    n->dir->pai = NULL;
+                }
+                if (n->pai->esq == n){
+                    n->pai->esq = n->dir;
+                    n->dir->pai = n->pai;
+                }
+                else{
+                    n->pai->dir = n->dir;
+                    n->dir->pai = n->pai;
+                }
+                balanceia(T, n->dir);
             }
-            balanceia(A, aux);
+            else{
+                no* min_dir = minimo(n->dir);
+                no* x = min_dir->pai;
+                if (n->dir == min_dir) x = min_dir;
+                if (T->raiz == n){
+                    T->raiz = min_dir;
+                    if (n->dir != min_dir){
+                        if (min_dir->dir != NULL){
+                            min_dir->dir->pai = min_dir->pai;
+                        }
+                        min_dir->pai->esq = min_dir->dir;
+                    }
+                    min_dir->pai = NULL;
+                }
+                else{
+                    if (n->pai->dir == n){
+                        n->pai->dir = min_dir;
+                        if (n->dir != min_dir){
+                            min_dir->pai->esq = min_dir->dir;
+                            if (min_dir->dir != NULL){
+                                min_dir->dir->pai = min_dir->pai;
+                            }
+                        }
+                        min_dir->pai = n->pai;
+                    }
+                    else{
+                        n->pai->esq = min_dir;
+                        if (n->dir != min_dir){
+                            min_dir->pai->esq = min_dir->dir;
+                            if (min_dir->dir) min_dir->dir->pai = min_dir->pai;
+                        }
+                        min_dir->pai = n->pai;
+                    }
+                }
+                min_dir->esq = n->esq;
+                if (min_dir->esq) min_dir->esq->pai = min_dir;
+                if (n->dir != min_dir){
+                    min_dir->dir = n->dir;
+                    if (min_dir->dir) min_dir->dir->pai = min_dir;
+                }
+                balanceia(T, x);
+            }
         }
-        return removido;
+        T->tam--;
+        return retorno;
     }
 }
 
@@ -389,36 +331,6 @@ no *insereAVL(arv *T, no *x, no *novo){
     }
     return x;
 }
-
-void imprime_AVL_crescente(no* n){
-    if (n == NULL) return;
-    else{
-        imprime_AVL_crescente(n->esq);
-        printf("%d %d %d\n", n->codCliente, n->qntOp, n->saldo);
-        imprime_AVL_crescente(n->dir);
-    }
-}
-
-void imprime_AVL_decrescente(no* n){
-    if (n == NULL) return;
-    else{
-        imprime_AVL_decrescente(noDir(n));
-        printf("%d %d %d\n", n->codCliente, n->qntOp, n->saldo);
-        imprime_AVL_decrescente(n->esq);
-    }
-}
-
-void imprime_AVL_nivel(no* n, int nivel, int cont){
-    if(n == NULL) return;
-    else if(nivel == cont){
-        printf("%d\n", n->codCliente);
-    }
-    else{
-        imprime_AVL_nivel(n->esq, nivel, cont+1);
-        imprime_AVL_nivel(n->dir, nivel, cont+1);
-    }
-}
-
 
 no *raiz(arv *T){
     return T->raiz;

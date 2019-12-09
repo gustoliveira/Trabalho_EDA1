@@ -5,7 +5,7 @@
 #include <string.h>
 #include "avl.h"
 
-//Função para inserir ou alterar valor de um dado nó
+//INSERE OU ALTERA VALOR NA ÁRVORE
 void insere(arv* T, int codCliente, int op, int valor){
     no *n = search_cod(raiz(T), codCliente);
     if(op == 1){
@@ -19,14 +19,14 @@ void insere(arv* T, int codCliente, int op, int valor){
     }
 }
 
-//Função para verificar se existe ou não nó com codigo dado
+//CONSULTA SE NÓ EXISTE OU NÃO
 void consulta(arv* T, int codCliente){
     no *n = search_cod(raiz(T), codCliente);
     if(n == NULL) printf("nao existe no com chave: %d\n", codCliente);
     else printf("existe no com chave: %d\n", codCliente);
 }
 
-//Função para remover nó
+//REMOVE NÓ
 void remove_no(arv* T, int codCliente){
     if(consulta_no(T, codCliente)){
         no* removido = removeAVL(T, raiz(T), codCliente);
@@ -34,14 +34,45 @@ void remove_no(arv* T, int codCliente){
     }
 }
 
-//Função para imprimir um certo nível da AVL
+//IMPRIME ARVORE EM ORDEM CRESCENTE
+void imprime_AVL_crescente(no* n){
+    if (n == NULL) return;
+    else{
+        imprime_AVL_crescente(noEsq(n));
+        printf("%d %d %d\n", codCliente_no(n), qntOp_no(n), saldo_no(n));
+        imprime_AVL_crescente(noDir(n));
+    }
+}
+
+//IMPRIME ARVORE EM ORDEM DESCRESCENTE
+void imprime_AVL_decrescente(no* n){
+    if (n == NULL) return;
+    else{
+        imprime_AVL_decrescente(noDir(n));
+        printf("%d %d %d\n", codCliente_no(n), qntOp_no(n), saldo_no(n));
+        imprime_AVL_decrescente(noEsq(n));
+    }
+}
+
+void imprime_AVL_nivel(no* n, int nivel, int cont){
+    if(n == NULL) return;
+    else if(nivel == cont){
+        printf("%d\n", codCliente_no(n));
+    }
+    else{
+        imprime_AVL_nivel(noEsq(n), nivel, cont+1);
+        imprime_AVL_nivel(noDir(n), nivel, cont+1);
+    }
+}
+
+//IMPRIME NÍVEL DA AVL
 void imprime_nivel(arv* T, int nivel){
     if(altura_no(raiz(T)) >= nivel){
         imprime_AVL_nivel(raiz(T), nivel, 1);
     }
 }
 
-//Imprime relatório final
+//IMPRIME RELATÓRIO FINAL
 void relatorio_final(arv* T){
     int n = tam_arv(T);
     printf("-+- Inicio relatorio -+-\n%d\n", n);

@@ -38,7 +38,7 @@ struct pilha{
 //Função para inicializar nó
 no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valor){
   no *n = (no*) malloc(sizeof(no));
-  if(n!=NULL){
+  if(n!=NULL){ //Teste de alocação de memória
 	    n->cpf = cpf;
 	    n->cpft = cpft;
 	    n->valor = valor;
@@ -53,7 +53,7 @@ no* create_n(unsigned long int cpf,unsigned long int cpft,char op, long int valo
 //Função para inicializar nó de lista
 nol* create_nol(unsigned long int cpf){
   nol *n = (nol*) malloc(sizeof(nol));
-  if(n!=NULL){
+  if(n!=NULL){ //Teste de alocação de memória
 	    n->cpf = cpf;
       n->ops = 0;
       n->saldo = 0;
@@ -66,7 +66,7 @@ nol* create_nol(unsigned long int cpf){
 //Função para inicializar pilha
 pilha* create_p(){
   pilha *p = (pilha*) malloc(sizeof(pilha));
-  if(p!=NULL){
+  if(p!=NULL){ //Teste de alocação de memória
 	    p->topo = NULL;
 	    p->cont = 0;
 	    return p;
@@ -75,11 +75,10 @@ pilha* create_p(){
 }
 
 //Função para empilhar elemento
-no* push_p(pilha *p, no *n){
+void push_p(pilha *p, no *n){
     n->prox = p->topo;
     p->topo = n;
     p->cont++;
-	return p->topo;
 }
 
 //Checa se a pilha está vazia, retorna "1" se sim e "0" caso contrário
@@ -107,13 +106,12 @@ no* pop_p(pilha *p){
 }
 
 //Remove a pilha e todos os dados referentes a ela
-pilha *destroy_p(pilha *p){
+void destroy_p(pilha *p){
 	while(1 == 1){
 		if(isEmpty_p(p) == 1) break;
 		free(pop_p(p)); //Libera o espaço de memória do Nó enquanto desempilha-o
 	}
 	free(p);
-	return p;
 }
 
 //Busca elemento na pilha e retorna-o
@@ -152,7 +150,7 @@ struct fila{
 //Função para inicializar fila
 fila* create_f(unsigned long int tamanho){
 	fila* f = (fila*) malloc(sizeof(fila));
- 	if(f!=NULL){
+ 	if(f!=NULL){ //Teste de alocação de memória
  		f->inicio = 0;
  		f->fim = tamanho-1;
  		f->qtd = 0;
@@ -246,7 +244,7 @@ struct lista{
 //Função para inicializar lista
 lista* create_l(){
     lista* l = (lista*) malloc(sizeof(lista));
-    if (l == NULL) return NULL;
+    if (l == NULL) return NULL; //Teste de alocação de memória
     else{
         l->primeiro = NULL;
         l->cont=0;
@@ -383,7 +381,7 @@ void show_p(pilha *p,lista* l){
 	if(isEmpty_p(p) == 0){
     pilha* paux = create_p();
 		while(isEmpty_p(p)!=1){
-      no* aux = pop_p(p);
+      no* aux = pop_p(p); 
 			printf("[%lu,%lu,%c,%lu]\n",aux->cpf,aux->cpft,aux->op,aux->valor);
       update_frelat(l,aux);
 			push_p(paux,aux);
@@ -418,7 +416,7 @@ void show_relat_final(lista* l){
 //Cria e inicializa vetor de pilhas para funcionarem como guichê
 pilha** create_vet_p(int qt_guiches){
   pilha **vetor_pilhas = (pilha**) malloc(sizeof(pilha*)*qt_guiches);
-  if(vetor_pilhas != NULL){
+  if(vetor_pilhas != NULL){ //Teste de alocação de memória
     for(int i =0; i<qt_guiches;i++){
       vetor_pilhas[i] = create_p();
     }
@@ -430,13 +428,14 @@ pilha** create_vet_p(int qt_guiches){
 int main(){
 
     int qt_guiches = 3; //Quantidade de guichês que serão disponibilizados para atendimento.
-	  unsigned long int n, cpf, cpft, valor;
+	  unsigned long int n, cpf, cpft;
+    long int valor;
     char op;
     scanf("%lu",&n); // Entrada de N
     fila* f = create_f(n); //Cria fila com tamanho máximo igual à quantidade de inserts
     //Criação do cliente integrado à inserção na fila de atendimento
     for(unsigned long int i = 0; i<n;i++){
-    	scanf("%lu %lu %c %lu", &cpf, &cpft, &op, &valor);
+    	scanf("%lu %lu %c %li", &cpf, &cpft, &op, &valor);
       no* cliente = create_n(cpf,cpft,op,valor);
       push_f(f,cliente); //Envia clientes para fila de espera
     } 
