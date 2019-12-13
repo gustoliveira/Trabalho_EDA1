@@ -9,8 +9,7 @@ typedef struct nol nol;
 struct nol{
 	unsigned long int cpf,ops; //unsigned long int utilizado para suportar entrada <= 2^32-1
 	long int saldo;
-	nol* ant;
-	nol* prox;
+	nol *ant, *prox;
 };
 
 //Definição do tipo lista

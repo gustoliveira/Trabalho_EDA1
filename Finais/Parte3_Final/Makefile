@@ -1,7 +1,6 @@
-
 a.out: no.o fila.o listaCirc.o pilha.o
 	gcc -Wall -Wextra -Werror -Wpedantic  main.c no.o fila.o pilha.o listaCirc.o -lm
-	
+
 no.o : no.c
 	gcc -Wall -Wextra -Werror -Wpedantic -c no.c -o no.o -lm
 

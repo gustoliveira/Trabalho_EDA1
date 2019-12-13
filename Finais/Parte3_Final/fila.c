@@ -49,12 +49,12 @@ int isEmpty_f(fila *f){
 
 //Função para enfileirar elemento
 void push_f(fila *f,no* x){
-	if(full_f(f)==1) printf("FILA CHEIA!");
-	else{
+	if(full_f(f) != 1){
 		f->fim = (f->fim+1)%f->tam;
 		f->vetor[f->fim] = x;
 		f->qtd++;
 	}
+	else return;
 }
 
 //Função para desenfileirar primeiro elemento da fila (NULL se vazia)
